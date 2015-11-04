@@ -72,11 +72,7 @@
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-We present a very fast and accurate single-image super-resolution (SR) method. Our method uses a very deep convolutional network inspired by VGG-net used for ImageNet classification \cite{simonyan2015very}. We find increasing network depth with very small ($3\times 3$) convolution filters show a significant improvement. Our method uses 20 weight layers.
-
-
-	In this work, we address three challenging issues of a single-image super-resolution system (SR) based on convolutional networks, which are the scale, convergence and context problems.  \textcolor{red}{Then we propose a new powerful system based on a deep residual-learning convolutional network (RCN).} 
-Scale is a serious problem of most conventional SR algorithms which can only up-sample images to a specific trained scale. In order to cope with arbitrary scales including even fractional ones, many different systems must be trained and stored for all possible scales, which is, however, practically intractable. To solve this problem, \textcolor{red}{we propose to use a single network to handle multi-scales.} The network is trained with data augmented by various scales and found to be very effective in handling multiple scales. Convergence is another critical issue in training a CNN for SR and we estimate the residual images instead of high-resolution images directly. As residuals are sparse, we find RCN converges much faster with better accuracy during training. Embedding sufficient context information \textcolor{red}{and nonlinearities} is also necessary to deal with large scale super-resolution. In our system, by cascading small filters many times in a deep network structure, contextual information over large image regions is successfully exploited. We empirically find that the performance improves as the network depth increases. Our proposed system demonstrates superior performances over the state-of-the-art methods for various scales.
+We present a very fast and accurate single-image super-resolution (SR) method. Our method uses a very deep convolutional network inspired by VGG-net used for ImageNet classification \cite{simonyan2015very}. We find increasing network depth with very small ($3\times 3$) convolution filters show a significant improvement. Our final model uses 20 weight layers. By cascading small filters many times in a deep network structure, contextual information over large image regions is successfully exploited. With very deep networks, however, convergence becomes a critical issue in training. We estimate the residual images instead of high-resolution images. As residuals are sparse, we find the network converges much faster with better accuracy during training. Our proposed method outperforms existing methods by a large margin while very fast.
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
@@ -89,17 +85,19 @@ Recently, sophisticated learning methods are widely used to model a mapping from
 
 Among them, Dong et al. \cite{Dong2014} has demonstrated that a CNN can be used to learn a mapping from LR to HR in an end-to-end manner. Their method, termed SRCNN, does not require any engineered features that are typically necessary in other methods \cite{yang2010image,zeyde2012single,Timofte2013,Timofte}. In addition, it is very fast and accurate.
 
-While SRCNN successfully introduced a deep learning technique into the super-resolution (SR) problem, we find its limitations in three aspects: first, the network only works for single-scale; second, training converges slowly; third, it relies on context of small image regions.
+While SRCNN successfully introduced a deep learning technique into the super-resolution (SR) problem, we find its limitations in three aspects: first, it relies on context of small image regions; second, training converges slowly; third, the network only works for single-scale.
 
- In this work, we propose a new method to resolve the aforementioned issues.
+In this work, we propose a new method to practically resolve the issues.
 
-\textbf{Scale Factor} We propose a single-model SR approach. Scales are typically user-specified and can be arbitrary including fractions. For example, one might need smooth zoom-in in an image viewer or resizing to a specific dimension. Training and storing many scale-dependent models in preparation for all possible scenarios is impractical. We find a single convolutional network is sufficient for multi-scale-factor super-resolution.
-
-\textbf{Convergence} We suggest a way to speed-up the training: residual-learning CNN. As LR image and HR image share the same information to a large extent, explicitly modelling the residual image which is the difference between HR and LR images is advantageous. We propose a network structure for efficient learning when input and output are highly correlated.
 
 \textbf{Context} We utilize contextual information spread over very large image regions. For a large scale factor, it is often the case that information contained in a small patch is not sufficient for detail recovery (ill-posed). Our very deep network using large receptive field is aware of large context necessary for large-scale super-resolution.
 
-\textbf{Contributions} In summary, in this work, we propose a new CNN-based SISR method that efficiently solves the three challenging problems: scale, convergence and context. Our method can be used to super-resolve an image very clean and sharp to \textcolor{red}{multiple scales} (Figure \ref{fig:fig1}). Our algorithm demonstrates the state-of-the-art quality for all benchmarked scale factors with this single model.
+\textbf{Convergence} We suggest a way to speed-up the training: residual-learning CNN. As LR image and HR image share the same information to a large extent, explicitly modelling the residual image which is the difference between HR and LR images is advantageous. We propose a network structure for efficient learning when input and output are highly correlated.
+
+\textbf{Scale Factor} We propose a single-model SR approach. Scales are typically user-specified and can be arbitrary including fractions. For example, one might need smooth zoom-in in an image viewer or resizing to a specific dimension. Training and storing many scale-dependent models in preparation for all possible scenarios is impractical. We find a single convolutional network is sufficient for multi-scale-factor super-resolution.
+
+
+\textbf{Contributions} In summary, in this work, we propose a very practical SR method: fast and accurate. Our method based on a very deep convolutional network can be used to super-resolve an image very clean and sharp. Our algorithm demonstrates the state-of-the-art quality for all benchmarked datasets.
 
 %Learning a mapping between low/high-resolution (LR/HR) images
 %Many single image super-resolution (SR) methods are based on learning a mapping
@@ -116,23 +114,25 @@ While SRCNN successfully introduced a deep learning technique into the super-res
 \end{figure*}
 
 \subsection{Convolutional Network for Image Super-Resolution}
-Recently, Dong et al. \cite{Dong2014} have presented a SISR method called SRCNN using a convolutional network. Let us first analyze SRCNN in three aspects: scale, convergence and context.
+Recently, Dong et al. \cite{dong2015image} have presented a SR method called SRCNN using a convolutional network. Let us first analyze SRCNN in three aspects: context, convergence and scale.
 
-\textbf{Scale} SRCNN is trained for a single scale factor and supposed to work only with the specified scale. Given a user-specified scale, the corresponding network is retrieved for the task. If new scale is on demand, new model has to be trained. Most existing methods including not only SRCNN but also other regression-based methods \cite{Timofte2013, Timofte, Yang2013} are in this paradigm. So, in these frameworks, the general super-resolution task is decomposed into multiple sub-tasks, where each sub-task is a single-scale super-resolution. Each sub-task is solved by a super-resolution machine, trained to be an expert for the corresponding scale. 
+\textbf{Context}
+SRCNN consists of only three layers: patch extraction/representation, non-linear mapping and reconstruction. They use filters with varying spatial sizes $9\times9$, $1\times1$, $5\times5$, respectively. In \cite{dong2015image}, they conclude that deeper networks do not result in better performance in Figure 9.
 
-However, preparing many individual machines for all possible scenarios to cope with multiple scales is inefficient since many systems with the same structure need to be trained and stored.
-We attempt to reinterpret the task in our work and try to use a single machine to solve all sub-tasks, multi-scale. This turns out to work very well. Our single machine is compared favorably to a single-scale expert for the given sub-task. \textcolor{red}{In addition, scale augmentation actually enriches training data and utilizes the capacity of deep networks.} 
+But we argue that increasing depth significantly boosts the performance. Their experiments failed to show the gain from deeper structure because their deeper versions converged very slowly and they early stopped the training.
+
+In contrast, we successfully use 20 weight layers($3\times3$ for each layer). Our network is very deep (20 vs. 3\cite{dong2015image}) and information used for reconstruction (receptive field) is much larger ($41\times41$ vs. $13\times13$\cite{dong2015image}).
 
 \textbf{Convergence}
 For training, SRCNN directly model high-resolution images so that the convergence rate is very slow. In contrast, our network models the residual images, i.e., the image details. We find convolution network converge much faster with better accuracy during training.
 
-\textbf{Context}
-SRCNN consists of only three layers: patch extraction/representation, non-linear mapping and reconstruction. They use filters with spatial sizes $9\times9$, $1\times1$, $5\times5$, respectively. Number of filters are 64, 32 and 1, where the last layer corresponds to the output (gray-scale image). In more recent work by Dong et al. \cite{dong2014image}, they conclude that deeper networks do not result in better performance.
+\textbf{Scale} SRCNN is trained for a single scale factor and supposed to work only with the specified scale. Given a user-specified scale, the corresponding network is retrieved for the task. If new scale is on demand, new model has to be trained. Most existing methods including not only SRCNN but also other regression-based methods \cite{Timofte2013, Timofte, Yang2013} are in this paradigm. So, in these frameworks, the general super-resolution task is decomposed into multiple sub-tasks, where each sub-task is a single-scale super-resolution. Each sub-task is solved by a super-resolution machine, trained to be an expert for the corresponding scale. 
 
-In contrast, we use 20 layers of the same type (64 filters of size $3\times3$ for each layer) except the last layer for image reconstruction. Our network is very deep (20 vs. 3) and information used for reconstruction (receptive field) is much larger ($41\times41$ vs. $13\times13$).
+However, preparing many individual machines for all possible scenarios to cope with multiple scales is inefficient since many systems with the same structure need to be trained and stored.
+We attempt to reinterpret the task in our work and try to use a single machine to solve all sub-tasks, multi-scale. This turns out to work very well. Our single machine is compared favorably to a single-scale expert for the given sub-task. For three scales factors ($\times 2,3,4$), we can reduce the number of parameters three-fold.
 
-\textcolor{red}{With above improvements,} our network delivers better performance than SRCNN. In addition, our output image has the same size as the input image by padding zeros every layer during training whereas no padding is used in training SRCNN. Finally, we use the same learning rates for all layers while SRCNN uses different learning rates for different layers.
 
+With above improvements, our network delivers a great performance. In addition, our output image has the same size as the input image by padding zeros every layer during training whereas output from SRCNN is smaller than the input. Finally, we simply use the same learning rates for all layers while SRCNN uses different learning rates for different layers.
 
 \begin{table*}[t]
 	\small
@@ -236,7 +236,7 @@ problems, the mean squared error $\frac{1}{2}||\mathbf{y}-f(\mathbf{x})||^{2}$
 averaged over training set is minimized. This favors high Peak Signal-to-Noise
 Ratio (PSNR), a widely-used evaluation criteria for SR. 
 
-As the input and output images are mostly similar, we define a residual image ${\bf r}={\bf y}-{\bf x}$, where most values are likely to be \textcolor{red}{zero or} small. We want to predict this residual image. The loss function now becomes $\frac{1}{2}||\mathbf{r}-f(\mathbf{x})||^{2}$, where $f(\bf{x})$ is the network prediction. Loss function is one major difference between SRCNN and ours. 
+As the input and output images are mostly similar, we define a residual image ${\bf r}={\bf y}-{\bf x}$, where most values are likely to be zero or small. We want to predict this residual image. The loss function now becomes $\frac{1}{2}||\mathbf{r}-f(\mathbf{x})||^{2}$, where $f(\bf{x})$ is the network prediction. Loss function is one major difference between SRCNN and ours. 
 
 In networks, this is reflected in the loss layer as follows. 
 Our loss layer takes three inputs: residual estimate, network input (ILR) and ground truth HR. The loss is computed as the Euclidean distance between the reconstructed image (the sum of network input and output) and ground truth. With this residual loss layer, we can still use the original dataset for an end-to-end learning.
@@ -248,7 +248,7 @@ Training deep models often fail to converge. He et al. \cite{he2015delving} uses
 
 Training the multi-scale model is straightforward. Training datasets for several specified scales are combined into one big dataset. We demonstrate in the next section that a model learned with this works under multiple scales.  
 
-\textcolor{red}{Data preparation is similar to SRCNN \cite{Dong2014} with some differences. Input patch size is equal to the size of receptive field and images are divided into sub-images with no overlap. 64 sub-images constitue a mini-batch, where sub-images from different scales can be in the same batch.}
+Data preparation is similar to SRCNN \cite{Dong2014} with some differences. Input patch size is equal to the size of receptive field and images are divided into sub-images with no overlap. 64 sub-images constitue a mini-batch, where sub-images from different scales can be in the same batch.
 
 We implement our model using the \textit{MatConvNet}\footnote{\url{ http://www.vlfeat.org/matconvnet/}} package \cite{arXiv:1412.4564}.
 
@@ -258,7 +258,7 @@ In this section, we study three properties of our proposed method. First, we sho
 
 Second, we show our residual-learning network converges very fast in relative to the standard CNN. Moreover, our network gives a significant boost in performance. 
 
-Third, we show large depth is necessary for the task of SR. A very deep network utilizes more contextual information in an image \textcolor{red}{and models complex functions with many nonlinear layers.} We experimentally confirm that deeper networks give better performances than shallow ones. 
+Third, we show large depth is necessary for the task of SR. A very deep network utilizes more contextual information in an image and models complex functions with many nonlinear layers. We experimentally confirm that deeper networks give better performances than shallow ones. 
 
 \subsection{Single Model for Multiple Scales}
 Scale augmentation during training is a key technique to equip a network with super-resolution machines of multiple scales. Many SR processes for different scales can be executed with our multi-scale machine with much smaller capacity than that of single-scale machines combined. 
@@ -282,7 +282,7 @@ In this work, we have proposed a network structure that learns from a residual i
 
 First, we find this residual network converge much faster. Two networks are compared experimentally: residual network and standard network. We use depth 10 (weight layers) and scale factor 2. Performance curves for various learning rates are shown in Figure \ref{fig:residual2}. All use the same learning rate scheduling mechanism that has been mentioned above. 
 
-Second, at convergence, the residual network shows superior performance. In \textcolor{red}{Figure \ref{fig:residual2}}, residual networks give higher PSNR when training is done. 
+Second, at convergence, the residual network shows superior performance. In Figure \ref{fig:residual2}, residual networks give higher PSNR when training is done. 
 
 In short, this simple modification to a standard network structure is beneficial and one can explore the validity of the idea in other image restoration problems. 
 
@@ -395,38 +395,8 @@ In Figure \ref{fig:depth}, we show the results. In most cases, performance incre
 \hline
 \end{tabular}
 \end{center}
-\caption{\textcolor{red}{PSNR for scale factor $\times$2, $\times$3 and $\times$4 on datasets `Set5', `Set14', `Urban100', and `B100'.} {\color{red} Red color} indicates the best performance and {\color{blue}blue color} indicates the second best one.} \label{table_all}
+\caption{PSNR for scale factor $\times$2, $\times$3 and $\times$4 on datasets `Set5', `Set14', `Urban100', and `B100'. {\color{red} Red color} indicates the best performance and {\color{blue}blue color} indicates the second best one.} \label{table_all}
 \end{table*}
-
-%\begin{table*}
-%\small	
-%	\centering
-%	\caption{PSNR for scale factor $\times$3 for Set14. {\color{red}Red color} indicates the best performance and {\color{blue}{blue color}} indicates the second best one.}
-%	\begin{tabular}
-%		{|c|c|c|c|c|c|c|c|c|c|}
-%		\hline
-%		Set14       & Scale     & {Bicubic} & {Yang et al.} & {Zeyde et al.}    & {ANR} & {NE+LLE}           & {SRCNN}            & {A+}               & {Ours (SFFSR)}     \\
-%		\hline
-%		baboon      & $\times$3 & 23.21     & 23.21         & 23.52             & 23.56 & 23.55              & 23.60              & \color{blue} 23.62 & \color{red} 23.66  \\
-%		barbara     & $\times$3 & 26.25     & 26.25         & \color{red} 26.76 & 26.69 & \color{blue} 26.74 & 26.66              & 26.47              & 26.31              \\
-%		bridge      & $\times$3 & 24.40     & 24.40         & 25.02             & 25.01 & 24.98              & 25.07              & \color{red} 25.17  & \color{blue} 25.16 \\
-%		coastguard  & $\times$3 & 26.55     & 26.55         & 27.15             & 27.08 & 27.07              & \color{blue} 27.20 & \color{red} 27.27  & 27.12              \\
-%		comic       & $\times$3 & 23.12     & 23.12         & 23.96             & 24.04 & 23.98              & \color{blue} 24.39 & 24.38              & \color{red} 24.81  \\
-%		face        & $\times$3 & 32.82     & 32.82         & 33.53             & 33.62 & 33.56              & 33.58              & \color{blue} 33.76 & \color{red} 33.77  \\
-%		flowers     & $\times$3 & 27.23     & 27.23         & 28.43             & 28.49 & 28.38              & 28.97              & \color{blue} 29.05 & \color{red} 29.56  \\
-%		foreman     & $\times$3 & 31.18     & 31.18         & 33.19             & 33.23 & 33.21              & 33.35              & \color{blue} 34.30 & \color{red} 34.46  \\
-%		lenna       & $\times$3 & 31.68     & 31.68         & 33.00             & 33.08 & 33.01              & 33.39              & \color{blue} 33.52 & \color{red} 33.76  \\
-%		man         & $\times$3 & 27.01     & 27.01         & 27.90             & 27.92 & 27.87              & 28.18              & \color{blue} 28.28 & \color{red} 28.52  \\
-%		monarch     & $\times$3 & 29.43     & 29.43         & 31.10             & 31.09 & 30.95              & \color{blue} 32.39 & 32.14              & \color{red} 33.94  \\
-%		pepper      & $\times$3 & 32.39     & 32.39         & 34.07             & 33.82 & 33.80              & 34.35              & \color{blue} 34.74 & \color{red} 35.00  \\
-%		ppt3        & $\times$3 & 23.71     & 23.71         & 25.23             & 25.03 & 24.94              & 26.02              & \color{blue} 26.09 & \color{red} 26.63  \\
-%		zebra       & $\times$3 & 26.63     & 26.63         & 28.49             & 28.43 & 28.31              & 28.87              & \color{blue} 28.98 & \color{red} 29.37  \\
-%		\hline
-%		\hline
-%		\bf Average & $\times$3 & 27.54     & 27.54         & 28.67             & 28.65 & 28.60              & 29.00              & \color{blue} 29.13 & \color{red} 29.43  \\
-%		\hline
-%	\end{tabular}
-%\end{table*}
 
 \section{Experimental Results}
 In this section, we evaluate the performance of our method on several datasets. We first describe datasets used for training and testing our method. Next, parameters necessary for training are given. 
@@ -443,7 +413,7 @@ We provide parameters used to train our final model. We use a network of depth 2
 For weight initialization, we use the method described in He et al. \cite{he2015delving}. This is a theoretically sound procedure for networks utilizing rectified linear units (ReLu).
 
 We train all experiments over 80 epochs (9960 iterations with batch size 64). Learning rate was initially set to 0.1 and then decreased by a factor of 10 every 20 epochs. In total, the learning rate was decreased 3 times, and the learning
-is stopped after 80 epochs. \textcolor{red}{Training takes roughly 4 hours on GPU Titan X.} 
+is stopped after 80 epochs. Training takes roughly 4 hours on GPU Titan X. 
 
 %\footnotetext{\textcolor{red}{PSNRs are slightly different from the original paper as they use different evaluation framework from Timofte et al. \cite{Timofte}}}
 
@@ -460,13 +430,10 @@ This framework crops pixels near image boundary. For our method, this procedure 
 \subsection{Comparisons with State-of-the-Art Methods}
 We provide quantitative and qualitative comparisons. Compared methods are A+ \cite{Timofte}, SRCNN \cite{Dong2014} and Huang et al. \cite{Huang-CVPR-2015}.
 
-\textcolor{red}{
 In Table \ref{table_all}, we provide a summary of quantitative evaluation on several datasets. In addition to our model trained with 91 images, we provide three more models. A model trained with 291 images (91 + 200 natural images from Berkeley Segmentation Dataset \cite{Martin2001}).
-We also provide RCN+ and RCN-291+, where transformed images (combination of flips and 90 deg. rotations) are also used for training. Our methods outperform all previous methods in these datasets. Moreover, our methods are very fast. }
+We also provide RCN+ and RCN-291+, where transformed images (combination of flips and 90 deg. rotations) are also used for training. Our methods outperform all previous methods in these datasets. Moreover, our methods are very fast.
 
 In Figures \ref{fig:c1}, \ref{fig:c2} and \ref{fig:c3} we compare our method with top-performing methods. In Figure \ref{fig:c1}, only our method perfectly reconstructs the line in the middle. Similarly, in Figures \ref{fig:c2} and \ref{fig:c3}, lines are clean and vivid in our method whereas they are severely blurred or distorted in other methods. As Huang et al. does not publicly provide $\times 3$ results we only compare with other two methods.
-
-
 
 \section{Conclusion}
 In this work, we have presented a single-model super-resolution method. Our method uses a very deep convolutional network modified for learning an residual (output minus input). We demonstrate three properties. First, we show our method works under various scales. Second, optimizing a residual-learning network converges rapidly toward a state-of-the-art solution. Third, very deep network operating on an large image region improves performance for large scale factors. We have demonstrated that our method outperforms the existing method by a large margin on benchmarked images. In the future, one can try a much deeper network in order to use full image-level information (receptive field larger than image). Residual-learning network is also readily applicable to other image restoration problems such as denoising and deblurring.
@@ -476,205 +443,3 @@ In this work, we have presented a single-model super-resolution method. Our meth
 	\bibliography{VDSR}
 }
 \end{document}
-
-% Some texs that are not used but possibly needed someday
-%\begin{figure*}[t]
-%	\centering
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.2\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/2-01.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.2\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/3-01.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.2\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/4-01.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/2-02.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/3-02.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/4-02.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/2-03.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/3-03.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/4-03.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/2-38.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/3-38.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/4-38.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%		
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/2-39.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/3-39.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.6\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/4-39.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%		
-%	%(or a blank line to force the subfigure onto a new line)
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.5\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/2-40.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.5\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/3-40.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	\hfill
-%	\begin{subfigure}{0.33\textwidth}
-%		\centering
-%		\includegraphics[width=0.5\textwidth]{../../../../srv1/matconvnet/SRCNN/scripts/net_intermidiate/4-40.png} 		\caption{Test Scale Factor 2}
-%		\label{fig:gull}
-%	\end{subfigure}%
-%	
-%\end{figure*}
-%
-%\begin{table*}[t]
-%	\small
-%	\centering
-%	\begin{tabular}
-%		{|c|c|c|c|c|c|c|}
-%		\hline
-%		Set5        & Scale     & {Bicubic} & {SRCNN (2)}        & {SRCNN (3)}        & {SRCNN (4)}        & {Ours}            \\
-%		\hline
-%		baby        & $\times$2 & 37.07     & \color{blue} 38.30 & 33.55              & 30.12              & \color{red} 38.55 \\
-%		bird        & $\times$2 & 36.81     & \color{blue} 40.64 & 32.25              & 28.08              & \color{red} 41.51 \\
-%		butterfly   & $\times$2 & 27.43     & \color{blue} 32.20 & 24.88              & 21.28              & \color{red} 33.31 \\
-%		head        & $\times$2 & 34.86     & \color{blue} 35.64 & 32.78              & 30.52              & \color{red} 35.77 \\
-%		woman       & $\times$2 & 32.14     & \color{blue} 34.94 & 28.04              & 24.47              & \color{red} 35.52 \\
-%		\hline
-%		\hline
-%		\bf Average & $\times$2 & 33.66     & \color{blue} 36.34 & 30.30              & 26.89              & \color{red} 36.93 \\
-%		\hline
-%		\hline
-%		baby        & $\times$3 & 33.91     & 34.12              & \color{blue} 35.01 & 32.78              & \color{red} 35.27 \\
-%		bird        & $\times$3 & 32.58     & 32.99              & \color{blue} 34.91 & 31.51              & \color{red} 35.95 \\
-%		butterfly   & $\times$3 & 24.04     & 24.57              & \color{blue} 27.58 & 24.81              & \color{red} 29.11 \\
-%		head        & $\times$3 & 32.88     & 33.06              & \color{blue} 33.55 & 32.43              & \color{red} 33.80 \\
-%		woman       & $\times$3 & 28.56     & 28.90              & \color{blue} 30.92 & 27.75              & \color{red} 31.87 \\
-%		\hline
-%		\hline
-%		\bf Average & $\times$3 & 30.39     & 30.73              & \color{blue} 32.39 & 29.86              & \color{red} 33.20 \\
-%		\hline
-%		\hline
-%		baby        & $\times$4 & 31.78     & 31.78              & 32.39              & \color{blue} 32.98 & \color{red} 33.11 \\
-%		bird        & $\times$4 & 30.18     & 30.25              & 31.12              & \color{blue} 31.98 & \color{red} 32.92 \\
-%		butterfly   & $\times$4 & 22.10     & 22.15              & 23.24              & \color{blue} 25.07 & \color{red} 26.45 \\
-%		head        & $\times$4 & 31.59     & 31.63              & 31.95              & \color{blue} 32.19 & \color{red} 32.57 \\
-%		woman       & $\times$4 & 26.46     & 26.47              & 27.38              & \color{blue} 28.21 & \color{red} 29.33 \\
-%		\hline
-%		\hline
-%		\bf Average & $\times$4 & 28.42     & 28.45              & 29.22              & \color{blue} 30.09 & \color{red} 30.88 \\
-%		\hline
-%	\end{tabular}
-%	\vspace{1pt}
-%	\caption{PSNR for scale factor $\times$2 for Set1. {\color{red}Red color} indicates the best performance and {\color{blue}{blue color}} indicates the second best one. Remark that bicubic interpolation works better }
-%	\label{tab:SRCNN_Factor_Test}
-%\end{table*}
-%
-%Even with a decent initialization method, training deep models is practically very hard as back-propagated gradients can easily explode as layer-wise gradients are multiplied many times \cite{bengio1994learning}. A popular strategy to avoid explosion is to use very small learning rates.  In SRCNN \cite{Dong2014}, Dong et al. uses the learning rate of $10^{-4}$ for the first two layers and $10^{-5}$ for the last layer. For very deep models, using small learning rates takes more than several months to converge. Instead, we use high learning rates with a gradient clipping strategy proposed to train recurrent neural networks \cite{pascanu2013difficulty}. By bounding gradients, we successfully train a very deep network with learning rate as large as 0.1.  
-
-%
-%
-%\begin{table*}
-%	\small
-%	\centering
-%	\caption{PSNR for scale factor $\times$4 for Set5. {\color{red}Red color} indicates the best performance and {\color{blue}{blue color}} indicates the second best one. [TODO which methods to benchmark?]}
-%	\begin{tabular}
-%		{|c|c|c|c|c|c|c|c|c||c|}
-%		\hline
-%		Set5        & Scale     & {Bicubic} & {Zeyde et al.} & {GR}  & {ANR} & {A+}               & {SRCNN} & {SFSR}             & {SFSR 291}        \\
-%		\hline
-%		baby        & $\times$2 & 37.07     & -              & 38.32 & 38.44 & 38.52              & 38.30   & \color{blue} 38.55 & \color{red} 38.65 \\
-%		bird        & $\times$2 & 36.81     & -              & 38.98 & 40.04 & 41.12              & 40.64   & \color{blue} 41.51 & \color{red} 42.21 \\
-%		butterfly   & $\times$2 & 27.43     & -              & 29.06 & 30.48 & 32.01              & 32.20   & \color{blue} 33.31 & \color{red} 34.22 \\
-%		head        & $\times$2 & 34.86     & -              & 35.60 & 35.66 & 35.77              & 35.64   & \color{blue} 35.77 & \color{red} 35.89 \\
-%		woman       & $\times$2 & 32.14     & -              & 33.70 & 34.55 & 35.31              & 34.94   & \color{blue} 35.52 & \color{red} 35.90 \\
-%		\hline
-%		\hline
-%		\bf Average & $\times$2 & 33.66     & -              & 35.13 & 35.83 & 36.55              & 36.34   & \color{blue} 36.93 & \color{red} 37.38 \\
-%		\hline
-%		\hline
-%		baby        & $\times$3 & 33.91     & 35.08          & 34.93 & 35.13 & 35.21              & 35.01   & \color{blue} 35.27 & \color{red} 35.30 \\
-%		bird        & $\times$3 & 32.58     & 34.57          & 33.90 & 34.60 & 35.54              & 34.91   & \color{blue} 35.95 & \color{red} 36.22 \\
-%		butterfly   & $\times$3 & 24.04     & 25.94          & 25.03 & 25.90 & 27.24              & 27.58   & \color{blue} 29.11 & \color{red} 29.66 \\
-%		head        & $\times$3 & 32.88     & 33.56          & 33.48 & 33.63 & 33.77              & 33.55   & \color{blue} 33.80 & \color{red} 33.88 \\
-%		woman       & $\times$3 & 28.56     & 30.37          & 29.73 & 30.33 & 31.20              & 30.92   & \color{blue} 31.87 & \color{red} 32.03 \\
-%		\hline
-%		\hline
-%		\bf Average & $\times$3 & 30.39     & 31.90          & 31.41 & 31.92 & 32.59              & 32.39   & \color{blue} 33.20 & \color{red} 33.42 \\
-%		\hline
-%		\hline
-%		baby        & $\times$4 & 31.78     & -              & 32.79 & 33.03 & \color{blue} 33.28 & 32.98   & 33.11              & \color{red} 33.32 \\
-%		bird        & $\times$4 & 30.18     & -              & 31.31 & 31.82 & 32.54              & 31.98   & \color{blue} 32.92 & \color{red} 33.21 \\
-%		butterfly   & $\times$4 & 22.10     & -              & 23.05 & 23.52 & 24.42              & 25.07   & \color{blue} 26.45 & \color{red} 26.85 \\
-%		head        & $\times$4 & 31.59     & -              & 32.10 & 32.27 & 32.52              & 32.19   & \color{blue} 32.57 & \color{red} 32.61 \\
-%		woman       & $\times$4 & 26.46     & -              & 27.43 & 27.80 & 28.65              & 28.21   & \color{blue} 29.33 & \color{red} 29.46 \\
-%		\hline
-%		\hline
-%		\bf Average & $\times$4 & 28.42     & -              & 29.34 & 29.69 & 30.28              & 30.09   & \color{blue} 30.88 & \color{red} 31.09 \\
-%		\hline
-%	\end{tabular}
-%\end{table*}
