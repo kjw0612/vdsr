@@ -19,7 +19,7 @@
 
 %\iccvfinalcopy % *** Uncomment this line for the final submission
 
-\def\cvprPaperID{****} % *** Enter the ICCV Paper ID here
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
 \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
 
 % Pages are numbered in submission mode, and unnumbered in camera-ready
@@ -158,24 +158,19 @@ In this section, our proposed method is explained in detail. We first go over th
 
 For reconstruction, we use a very deep convolutional network inspired by Simonyan and Zisserman \cite{simonyan2015very}. The configuration is outlined in Figure \ref{fig:network}. We use $d$ layers where layers except the first and the last are of the same type: 64 filter of the size $3\times 3 \times64$, where a filter operates on $3\times3$ spatial region across 64 channels (feature maps). The first layer operates on the input image. The last layer, used for image reconstruction, consists of a single filter of size $3\times 3 \times64$.
 
-The network takes an interpolated input image (to the desired size) as input and predicts image details. While modelling image details is often used in super-resolution methods \cite{Timofte2013, Timofte, bevilacqua2012,bevilacqua2013super}, to our knowledge, there has been no CNN-based method that models image details explicitly.
+The network takes an interpolated input image (to the desired size) as input and predicts image details. Modelling image details is often used in super-resolution methods \cite{Timofte2013, Timofte, bevilacqua2012,bevilacqua2013super} and we find that CNN-based methods can benefit from this domain-specific knowledge.
 
-In this work, we demonstrate explicitly modelling image details is sufficient for the purpose of SR and has several advantages. These are further justified and discussed later in the Section \ref{sec:residual}. 
+In this work, we demonstrate explicitly modelling image has several advantages. These are further discussed later in the Section \ref{sec:residual}. 
 
-One problem with applying a deep network to predict dense outputs is that the size of feature map gets reduced every time convolution operations are applied. For example,  when an input of size $(n+1)\times (n+1)$ is applied to a network with receptive field size $n\times n$, the output image is $1\times1$. 
+One problem with using a very deep network to predict dense outputs is that the size of feature map gets reduced every time convolution operations are applied. For example,  when an input of size $(n+1)\times (n+1)$ is applied to a network with receptive field size $n\times n$, the output image is $1\times1$. 
 
 This is in accordance with other super-resolution methods since many require surrounding pixels to infer center pixels correctly. This center-surround relation is useful since surrounding region provides more constraints to this ill-posed problem (SR). For pixels near image boundary, this relation cannot be exploited to the full extent and many SR methods crop the result image. 
 
 This methodology, however, is not valid if required surround region is very big. After cropping, the final image is too small to be visually pleasing.
 
-To resolve this issue, we opt not to use this relation. Instead, we use the same-sized regions (i.e. $n\times n$ input and output). To do this, we pad zeros before convolutions to keep the sizes of all feature maps (including the output image) the same. We think that powerful nonlinearities modelled by CNNs can handle both the general case (i.e. receptive field has all valid pixels) and the corner case (i.e. the field located near the image boundary has invalid pixels beyond the border).
-
-It turns out that zero-padding works surprisingly well. For this reason our method differs from most other methods in the sense that pixels near image boundary are also correctly predicted. 
+To resolve this issue, we pad zeros before convolutions to keep the sizes of all feature maps (including the output image) the same. It turns out that zero-padding works surprisingly well. For this reason our method differs from most other methods in the sense that pixels near image boundary are also correctly predicted.  
 
 Once image details are predicted, they are added back to ILR to give the final result (HR). We use this structure for all experiments in our work.  
-
-
-
 
 \begin{figure*}[t]
 	\centering
@@ -229,14 +224,14 @@ Once image details are predicted, they are added back to ILR to give the final r
 \subsection{Training}
 
 We now describe the objective to minimize to find optimal parameters of our model. Let ${\bf x}$ denote an interpolated low-resolution image and ${\bf y}$ a high-resolution image. 
-Given training dataset $\{{\bf x}^{(i)},{\bf y}^{(i)}\}{}_{i=1}^{N}$, our goal is to learn a model $f$ that predicts values $\mathbf{\hat{y}}=f(\mathbf{x})$.
+Given a training dataset $\{{\bf x}^{(i)},{\bf y}^{(i)}\}{}_{i=1}^{N}$, our goal is to learn a model $f$ that predicts values $\mathbf{\hat{y}}=f(\mathbf{x})$.
 
 In the least-squares regression setting, typically used in super-resolution
 problems, the mean squared error $\frac{1}{2}||\mathbf{y}-f(\mathbf{x})||^{2}$
-averaged over training set is minimized. This favors high Peak Signal-to-Noise
+averaged over the training set is minimized. This favors high Peak Signal-to-Noise
 Ratio (PSNR), a widely-used evaluation criteria for SR. 
 
-As the input and output images are mostly similar, we define a residual image ${\bf r}={\bf y}-{\bf x}$, where most values are likely to be zero or small. We want to predict this residual image. The loss function now becomes $\frac{1}{2}||\mathbf{r}-f(\mathbf{x})||^{2}$, where $f(\bf{x})$ is the network prediction. Loss function is one major difference between SRCNN and ours. 
+As the input and output images are mostly similar, we define a residual image ${\bf r}={\bf y}-{\bf x}$, where most values are likely to be zero or small. {\color{red}TODO add a simple experiment confirming this.} We want to predict this residual image. The loss function now becomes $\frac{1}{2}||\mathbf{r}-f(\mathbf{x})||^{2}$, where $f(\bf{x})$ is the network prediction. 
 
 In networks, this is reflected in the loss layer as follows. 
 Our loss layer takes three inputs: residual estimate, network input (ILR) and ground truth HR. The loss is computed as the Euclidean distance between the reconstructed image (the sum of network input and output) and ground truth. With this residual loss layer, we can still use the original dataset for an end-to-end learning.
@@ -244,34 +239,48 @@ Our loss layer takes three inputs: residual estimate, network input (ILR) and gr
 Training is carried out by optimizing the regression objective using mini-batch gradient descent based on back-propagation (LeCun et al. \cite{lecun1998gradient}). We set the momentum parameter to 0.9. The training is regularized by weight decay ($L_2$ penalty multiplied by
 0.0001).  
 
-Training deep models often fail to converge. He et al. \cite{he2015delving} uses a theoretically sound initialization method which helps very deep models converge when training from scratch and they succeed in training 30 weight layers. They, however, report no benefit from training extremely deep models for their problem. In our work, adding layers are beneficial in general. For large scale factors, deep models exploiting contextual information spread in very large field are dominant. 
+Training deep models often fail to converge. SRCNN \cite{dong2015image} fails to increase depth beyond three weight layers. In our work, we show adding layers is beneficial in general. Adding layers basically indicates increase in receptive field size. For large scale factors, it is likely that contextual information spread in very large field is necessary.
 
-Training the multi-scale model is straightforward. Training datasets for several specified scales are combined into one big dataset. We demonstrate in the next section that a model learned with this works under multiple scales.  
+While very deep models can boost performance, now more parameters are needed to define a network. Typically, one network is created for each scale factor. Considering that fractional scale factors are often used, we need an economical way to store and retrieve networks.
 
-Data preparation is similar to SRCNN \cite{Dong2014} with some differences. Input patch size is equal to the size of receptive field and images are divided into sub-images with no overlap. 64 sub-images constitue a mini-batch, where sub-images from different scales can be in the same batch.
+For this reason, we also train a multi-scale model. With this approach, parameters are shared across all predefined scale factors. Training a multi-scale model is straightforward. Training datasets for several specified scales are combined into one big dataset. We demonstrate in the next section that a model learned with this works under multiple scales.
+
+Data preparation is similar to SRCNN \cite{Dong2014} with some differences. Input patch size is now equal to the size of receptive field and images are divided into sub-images with no overlap. 64 sub-images constitue a mini-batch, where sub-images from different scales can be in the same batch.
 
 We implement our model using the \textit{MatConvNet}\footnote{\url{ http://www.vlfeat.org/matconvnet/}} package \cite{arXiv:1412.4564}.
 
+
+\begin{figure*}
+\includegraphics[width=\textwidth]{figs/fig1_sffsr.pdf}
+\caption{(Top) Our results using a single network for all scale factors. Super-resolved images over all scales are clean and sharp. (Bottom)  Results of Dong et al.  \cite{Dong2014} ($\times$3 model used for all scales). Result images are not visually pleasing. To handle multiple scales, existing methods require multiple networks.}
+\end{figure*}
+
 \section{Understanding Properties}
 
-In this section, we study three properties of our proposed method. First, we show our method with a single network performs as well as a method using multiple networks trained for each scale. We can effectively reduce model capacity (the number of parameters) of multi-network approaches.
+In this section, we study three properties of our proposed method. First, we show large depth is necessary for the task of SR. A very deep network utilizes more contextual information in an image and models complex functions with many nonlinear layers. We experimentally confirm that deeper networks give better performances than shallow ones. 
 
 Second, we show our residual-learning network converges very fast in relative to the standard CNN. Moreover, our network gives a significant boost in performance. 
 
-Third, we show large depth is necessary for the task of SR. A very deep network utilizes more contextual information in an image and models complex functions with many nonlinear layers. We experimentally confirm that deeper networks give better performances than shallow ones. 
+Third, we show our method with a single network performs as well as a method using multiple networks trained for each scale. We can effectively reduce model capacity (the number of parameters) of multi-network approaches.
 
-\subsection{Single Model for Multiple Scales}
-Scale augmentation during training is a key technique to equip a network with super-resolution machines of multiple scales. Many SR processes for different scales can be executed with our multi-scale machine with much smaller capacity than that of single-scale machines combined. 
 
-We start with an interesting experiment as follows: we train our network with a scale factor $s_{\text{train}}$ and it is tested under another scale factor $s_{\text{test}}$. Here, factors 2,3 and 4 that are widely used in SR comparisons are considered. Possible pairs ($s_{\text{train}}$,$s_{\text{test}}$) are tried for the dataset `Set5' \cite{bevilacqua2012}. Experimental results are summarized in Table \ref{tab:SRCNN_Factor_Test}. 
+\subsection{High Depths for Large Contexts}
+In this section, we study the depth of a convolutional neural network (CNN) in the context of super-resolution. We first revisit the meaning of receptive field in a CNN. 
 
-Performance is degraded if $s_{\text{train}} \neq s_{\text{test}}$. For scale factor 2, the model trained with factor 2 gives PSNR of 37.10 (in dB), whereas models trained with factor 3 and 4 give 30.05 and 28.13, respectively. A network trained over single-scale data is not capable of handling other scales. In many tests, it is even worse than bicubic interpolation, the method used for generating the input image. 
+Convolutional neural networks exploit spatially-local correlation by enforcing a local connectivity pattern between neurons of adjacent layers \cite{Bengio-et-al-2015-Book}. In other words, hidden units in layer $m$ take as input a subset of units in layer $m-1$. They form spatially contiguous receptive fields (Figure \ref{fig:receptive_field}).
 
-We now test if a model trained with scale augmentation is capable of performing SR at multiple scale factors. The same network used above is trained with multiple scale factors $s_{\text{train}} = \{2,3,4\}$. In addition, we experiment with the cases $s_{\text{train}} = \{2,3\}, \{2,4\}, \{3,4\}$ for more comparisons. 
+Each hidden unit is unresponsive to variations outside of its receptive field with respect to the input. The architecture thus ensures that the learned filters produce the strongest response to a spatially local input pattern.
 
-We observe the network copes with any scale used during training. When $s_{\text{train}} = \{2,3,4\}$ ($\times 2, 3, 4$ in Table \ref{tab:SRCNN_Factor_Test}), its PSNR for each scale is comparable to those achieved from the corresponding result of single-scale network: 37.06 vs. 37.10 ($\times 2$), 33.27 vs. 32.89 ($\times 3$), 30.95 vs. 30.86 ($\times 4$).
+However, stacking many such layers leads to filters that become increasingly “global” (i.e. responsive to a larger region of pixel space). In other words, a filter of very large support is decomposed into a series of small filters. 
 
-Another pattern is that for large scales ($\times 3,4$), our multi-scale network performs over single-scale network: our model ($\times 2,3$), ($\times 3,4$) and ($\times 2, 3,4$) give PSNRs 33.22, 33.24 and 33.27 for test scale 3, respectively, whereas ($\times 3$) gives 32.89. Similarly, ($\times 2,4$), ($\times 3,4$) and ($\times 2, 3,4$) give 30.86, 30.94 and 30.95 (vs. 30.84 by $\times 4$ model),  respectively. From this, we observe training multiple scales boost the performance for large scales.
+In this work, we use filters of the same size 3$\times$3 for all layers. For the first layer, its receptive field is of size 3$\times$3. For the next layers, the size of its receptive field increases by 2 in both height and width. For depth $M$ network, its receptive field has size $(2M+1)\times(2M+1)$. Its size is proportional to the depth.
+
+In the task of SR, this corresponds to the amount of contextual information that can be exploited to infer high-frequency components. Large receptive field means the network can use more context from large image region to predict details of an image. As SR is an ill-posed inverse problem, collecting and analyzing more neighbor pixels give more clues. For example, if there are some image patterns entirely contained in a receptive field, it is plausible that this pattern is recognized and used to super-resolve the image. 
+
+We now experimentally show that very deep networks significantly improve performance.  Since our layers are of the same type, we train and test networks of depth ranging from 5 to 20 (only counting weight layers excluding nonlinearity layers). 
+
+In Figure \ref{fig:depth}, we show the results. In most cases, performance increases as depth increases. As depth increases, performance improves rapidly. Due to time limit, we were not able to produce results beyond depth 20. 
+
 
 \subsection{Residual Images for Better Learning}
 \label{sec:residual}
@@ -282,18 +291,22 @@ In this work, we have proposed a network structure that learns from a residual i
 
 First, we find this residual network converge much faster. Two networks are compared experimentally: residual network and standard network. We use depth 10 (weight layers) and scale factor 2. Performance curves for various learning rates are shown in Figure \ref{fig:residual2}. All use the same learning rate scheduling mechanism that has been mentioned above. 
 
-Second, at convergence, the residual network shows superior performance. In Figure \ref{fig:residual2}, residual networks give higher PSNR when training is done. 
+Second, at convergence, the residual network shows superior performance. In Figure \ref{fig:residual2}, residual networks give higher PSNR when training is done. {\color{red} psnr diff. time as table}
 
-In short, this simple modification to a standard network structure is beneficial and one can explore the validity of the idea in other image restoration problems. 
+In short, this simple modification to a standard network structure is very powerful and one can explore the validity of the idea in other image restoration problems. 
 
-\begin{figure}
-\vspace{-1cm}
-\centering
-\includegraphics[scale=0.3]{figs/fig4_sffsr.pdf}
-\vspace{-0.7cm}
-\caption{Receptive field for a neuron in network grows as layers are stacked. In our work, up to 20 layers are used reaching 41$\times$41 at maximum. }
-\label{fig:receptive_field}
-\end{figure}
+\subsection{Single Model for Multiple Scales}
+Scale augmentation during training is a key technique to equip a network with super-resolution machines of multiple scales. Many SR processes for different scales can be executed with our multi-scale machine with much smaller capacity than that of single-scale machines combined. 
+
+We start with an interesting experiment as follows: we train our network with a scale factor $s_{\text{train}}$ and it is tested under another scale factor $s_{\text{test}}$. Here, factors 2,3 and 4 that are widely used in SR comparisons are considered. Possible pairs ($s_{\text{train}}$,$s_{\text{test}}$) are tried for the dataset `Set5' \cite{bevilacqua2012}. Experimental results are summarized in Table \ref{tab:SRCNN_Factor_Test}. 
+
+Performance is degraded if $s_{\text{train}} \neq s_{\text{test}}$. For scale factor 2, the model trained with factor 2 gives PSNR of 37.10 (in dB), whereas models trained with factor 3 and 4 give 30.05 and 28.13, respectively. A network trained over single-scale data is not capable of handling other scales. In many tests, it is even worse than bicubic interpolation, the method used for generating the input image. 
+
+We now test if a model trained with scale augmentation is capable of performing SR at multiple scale factors. The same network used above is trained with multiple scale factors $s_{\text{train}} = \{2,3,4\}$. In addition, we experiment with the casses $s_{\text{train}} = \{2,3\}, \{2,4\}, \{3,4\}$ for more comparisons. 
+
+We observe the network copes with any scale used during training. When $s_{\text{train}} = \{2,3,4\}$ ($\times 2, 3, 4$ in Table \ref{tab:SRCNN_Factor_Test}), its PSNR for each scale is comparable to those achieved from the corresponding result of single-scale network: 37.06 vs. 37.10 ($\times 2$), 33.27 vs. 32.89 ($\times 3$), 30.95 vs. 30.86 ($\times 4$).
+
+Another pattern is that for large scales ($\times 3,4$), our multi-scale network performs over single-scale network: our model ($\times 2,3$), ($\times 3,4$) and ($\times 2, 3,4$) give PSNRs 33.22, 33.24 and 33.27 for test scale 3, respectively, whereas ($\times 3$) gives 32.89. Similarly, ($\times 2,4$), ($\times 3,4$) and ($\times 2, 3,4$) give 30.86, 30.94 and 30.95 (vs. 30.84 by $\times 4$ model),  respectively. From this, we observe training multiple scales boost the performance for large scales.
 
 
 \begin{figure*}
@@ -342,23 +355,6 @@ Original / PSNR (dB) &A+ / 25.87 &SRCNN / 25.76 &RCN (Ours) / 26.57 \\
 \vspace{-.5cm}
 \caption{Super-resolution results (Urban100) with scale factor $\times$3. Our result is visually pleasing.}\label{fig:c3}
 \end{figure*}
-
-\subsection{High Depths for Large Contexts}
-In this section, we study the depth of a convolutional neural network (CNN) in the context of super-resolution. We first start with the definition of receptive field in a CNN. 
-
-CNNs exploit spatially-local correlation by enforcing a local connectivity pattern between neurons of adjacent layers \cite{Bengio-et-al-2015-Book}. In other words, hidden units in layer $m$ take as input a subset of units in layer $m-1$. They form spatially contiguous receptive fields (Figure \ref{fig:receptive_field}).
-
-Imagine that layer $m-1$ is the input image. In the figure, units in layer $m$ have receptive fields of 3$\times$3 in the input and are thus only connected to 9 adjacent neurons in the input layer. Units in layer $m+1$ have a similar connectivity with the layer below. We say that their receptive field with respect to the layer below is 3$\times$3, but their receptive field with respect to the input is larger (5$\times$5). Each unit is unresponsive to variations outside of its receptive field with respect to the input. The architecture thus ensures that the learned filters produce the strongest response to a spatially local input pattern.
-
-However, as shown above, stacking many such layers leads to filters that become increasingly “global” (i.e. responsive to a larger region of pixel space). For example, the unit in hidden layer $m+1$ can encode a non-linear feature of 5$\times$5 (in terms of image pixel space).
-
-In this work, we use small filters of the same size 3$\times$3 for all layers. For the first layer, its receptive field is of size 3$\times$3. For the next layers, the size of its receptive field increases by 2 in both height and width. For depth $M$ network, its receptive field has size $(2M+1)\times(2M+1)$. Its size is proportional to the depth.
-
-In the task of SR, this corresponds to the amount of contextual information that can be exploited to infer high-frequency components. Large receptive field means the network can use more context from large image region to predict details of an image. As SR is an ill-posed inverse problem, collecting and analyzing more neighbor pixels give more clues. For example, if there are some image patterns entirely contained in a receptive field, it is plausible that this pattern is recognized and used to super-resolve the image. 
-
-We now experimentally show that very deep networks significantly improve performance.  Since our layers are of the same type, we train and test networks of depth ranging from 5 to 20 (only counting weight layers excluding nonlinearity layers). 
-
-In Figure \ref{fig:depth}, we show the results. In most cases, performance increases as depth increases. The exception is scale factor 2. As depth increases, performance on scale factors 3 and 4 improve rapidly. Since we use Euclidean loss, it tends to correct severe errors first, which are more prevalent in high scale factors. Different loss functions can be explored to balance the importance between scales and these are left as a future work. 
 
 \begin{table*}
 \footnotesize
