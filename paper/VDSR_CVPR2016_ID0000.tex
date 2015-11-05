@@ -87,6 +87,13 @@ Among them, Dong et al. \cite{Dong2014} has demonstrated that a CNN can be used 
 
 While SRCNN successfully introduced a deep learning technique into the super-resolution (SR) problem, we find its limitations in three aspects: first, it relies on context of small image regions; second, training converges slowly; third, the network only works for single-scale.
 
+\begin{figure}
+\centering
+{\graphicspath{{figs/figf/}}\includegraphics[width=7cm]{frontfig}}
+\caption{Our VDSR shows the best PSNR and runtime in comparison to the other state-of-the-art methods.}
+\end{figure}
+
+
 In this work, we propose a new method to practically resolve the issues.
 
 
@@ -360,43 +367,41 @@ We now experimentally show that very deep networks significantly improve perform
 
 In Figure \ref{fig:depth}, we show the results. In most cases, performance increases as depth increases. The exception is scale factor 2. As depth increases, performance on scale factors 3 and 4 improve rapidly. Since we use Euclidean loss, it tends to correct severe errors first, which are more prevalent in high scale factors. Different loss functions can be explored to balance the importance between scales and these are left as a future work. 
 
-\begin{table*}
-\footnotesize
-\begin{center}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| }
-\hline
-\multirow{2}{*}{Dataset} & \multirow{2}{*}{Scale} & {Bicubic} & {A+} & {SRCNN} & {Huang et al.} & {RCN} & {RCN-291} & {RCN+} & {RCN-291+ (Ours)}\\ 
 
- &  & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time\\ 
+\begin{table*}
+\begin{center}
+\setlength{\tabcolsep}{2pt}
+\footnotesize
+\begin{tabular}{ | c | c | c | c | c | c | c | c | }
+\hline
+\multirow{2}{*}{Dataset} & \multirow{2}{*}{Scale} & Bicubic & A+ & RFL & SelfEx & SRCNN & VDSR (Ours)\\
+ & & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time\\
 \hline
 \hline
-\multirow{3}{*}{Set5}
-& $\times$2& 33.66 / - & 36.55 / 0.44& 36.66 / 2.12& -& 37.06 / 0.31& \color{blue} 37.38 / 0.15& 37.24 / 0.18& \color{red} 37.53 / 0.19\\
-& $\times$3& 30.39 / - & 32.59 / 0.23& 32.75 / 2.13& -& 33.27 / 0.22& 33.42 / 0.15& \color{blue} 33.50 / 0.18& \color{red} 33.67 / 0.19\\
-& $\times$4& 28.42 / - & 30.28 / 0.16& 30.49 / 2.21& -& 30.95 / 0.22& 31.09 / 0.15& \color{blue} 31.22 / 0.18& \color{red} 31.35 / 0.19\\
+\multirow{3}{*}{Set5} & $\times$2 & 33.66/0.9299/0.00 & 36.54/{\color{blue}0.9544}/{\color{blue}0.58} & 36.54/0.9537/0.63 & 36.49/0.9537/45.78 & {\color{blue}36.66}/0.9542/2.19 & {\color{red}37.53}/{\color{red}0.9587}/{\color{red}0.13}\\
+ & $\times$3 & 30.39/0.8682/0.00 & 32.58/0.9088/{\color{blue}0.32} & 32.43/0.9057/0.49 & 32.58/{\color{blue}0.9093}/33.44 & {\color{blue}32.75}/0.9090/2.23 & {\color{red}33.66}/{\color{red}0.9213}/{\color{red}0.13}\\
+ & $\times$4 & 28.42/0.8104/0.00 & 30.28/0.8603/{\color{blue}0.24} & 30.14/0.8548/0.38 & 30.31/0.8619/29.18 & {\color{blue}30.48}/{\color{blue}0.8628}/2.19 & {\color{red}31.35}/{\color{red}0.8838}/{\color{red}0.12}\\
 \hline
 \hline
-\multirow{3}{*}{Set14}
-& $\times$2& 30.23 / - & 32.28 / 0.92& 32.45 / 3.79& -& 32.61 / 0.32& \color{blue} 32.84 / 0.21& 32.77 / 0.26& \color{red} 33.04 / 0.27\\
-& $\times$3& 27.54 / - & 29.13 / 0.48& 29.30 / 3.78& -& 29.48 / 0.32& 29.63 / 0.21& \color{blue} 29.64 / 0.26& \color{red} 29.77 / 0.27\\
-& $\times$4& 26.00 / - & 27.32 / 0.34& 27.50 / 3.80& -& 27.71 / 0.32& 27.85 / 0.21& \color{blue} 27.91 / 0.26& \color{red} 28.01 / 0.27\\
+\multirow{3}{*}{Set14} & $\times$2 & 30.24/0.8688/0.00 & 32.28/0.9056/{\color{blue}0.86} & 32.26/0.9040/1.13 & 32.22/0.9034/105.00 & {\color{blue}32.42}/{\color{blue}0.9063}/4.32 & {\color{red}33.03}/{\color{red}0.9124}/{\color{red}0.25}\\
+ & $\times$3 & 27.55/0.7742/0.00 & 29.13/0.8188/{\color{blue}0.56} & 29.05/0.8164/0.85 & 29.16/0.8196/74.69 & {\color{blue}29.28}/{\color{blue}0.8209}/4.40 & {\color{red}29.77}/{\color{red}0.8314}/{\color{red}0.26}\\
+ & $\times$4 & 26.00/0.7027/0.00 & 27.32/0.7491/{\color{blue}0.38} & 27.24/0.7451/0.65 & 27.40/{\color{blue}0.7518}/65.08 & {\color{blue}27.49}/0.7503/4.39 & {\color{red}28.01}/{\color{red}0.7674}/{\color{red}0.25}\\
 \hline
 \hline
-\multirow{3}{*}{Urban100}
-& $\times$2& 26.61 / - & 28.57 / 3.15& 28.82 / 12.78& -& 29.22 / 0.76& \color{blue} 29.52 / 0.51& 29.41 / 0.67& \color{red} 29.76 / 0.68\\
-& $\times$3& 24.36 / - & 25.82 / 1.68& 25.99 / 12.85& -& 26.35 / 0.76& 26.52 / 0.51& \color{blue} 26.53 / 0.67& \color{red} 26.76 / 0.68\\
-& $\times$4& 23.07 / - & 24.22 / 1.17& 24.40 / 12.60& 24.55 / -& 24.62 / 0.77& 24.78 / 0.51& \color{blue} 24.82 / 0.67& \color{red} 24.99 / 0.68\\
+\multirow{3}{*}{B100} & $\times$2 & 29.56/0.8431/0.00 & 31.21/0.8863/{\color{blue}0.59} & 31.16/0.8840/0.80 & 31.18/0.8855/60.09 & {\color{blue}31.36}/{\color{blue}0.8879}/2.51 & {\color{red}31.90}/{\color{red}0.8960}/{\color{red}0.16}\\
+ & $\times$3 & 27.21/0.7385/0.00 & 28.29/0.7835/{\color{blue}0.33} & 28.22/0.7806/0.62 & 28.29/0.7840/40.01 & {\color{blue}28.41}/{\color{blue}0.7863}/2.58 & {\color{red}28.82}/{\color{red}0.7976}/{\color{red}0.21}\\
+ & $\times$4 & 25.96/0.6675/0.00 & 26.82/0.7087/{\color{blue}0.26} & 26.75/0.7054/0.48 & 26.84/{\color{blue}0.7106}/35.87 & {\color{blue}26.90}/0.7101/2.51 & {\color{red}27.29}/{\color{red}0.7251}/{\color{red}0.21}\\
 \hline
 \hline
-\multirow{3}{*}{B100}
-& $\times$2& 29.32 / - & 30.77 / 0.58& 30.89 / 2.43& 30.70 / -& 31.02 / 0.25& \color{blue} 31.21 / 0.17& 31.13 / 0.21& \color{red} 31.30 / 0.22\\
-& $\times$3& 27.15 / - & 28.18 / 0.31& 28.28 / 2.48& 28.10 / -& 28.42 / 0.25& \color{blue} 28.55 / 0.17& 28.52 / 0.21& \color{red} 28.64 / 0.22\\
-& $\times$4& 25.92 / - & 26.77 / 0.22& 26.84 / 2.39& 26.74 / -& 26.98 / 0.25& \color{blue} 27.10 / 0.17& 27.08 / 0.20& \color{red} 27.20 / 0.21\\
+\multirow{3}{*}{Urban100} & $\times$2 & 26.88/0.8403/0.00 & 29.20/0.8938/{\color{blue}2.96} & 29.11/0.8904/3.62 & {\color{blue}29.54}/{\color{blue}0.8967}/410.23 & 29.50/0.8946/22.12 & {\color{red}30.76}/{\color{red}0.9140}/{\color{red}0.98}\\
+ & $\times$3 & 24.46/0.7349/0.00 & 26.03/0.7973/{\color{blue}1.67} & 25.86/0.7900/2.48 & {\color{blue}26.44}/{\color{blue}0.8088}/462.93 & 26.24/0.7989/19.35 & {\color{red}27.14}/{\color{red}0.8279}/{\color{red}1.08}\\
+ & $\times$4 & 23.14/0.6577/0.00 & 24.32/0.7183/{\color{blue}1.21} & 24.19/0.7096/1.88 & {\color{blue}24.79}/{\color{blue}0.7374}/392.72 & 24.52/0.7221/18.46 & {\color{red}25.18}/{\color{red}0.7524}/{\color{red}1.06}\\
 \hline
 \end{tabular}
+\caption{Average PSNR/SSIM for scale factor $\times$2, $\times$3 and $\times$4 on datasets Set5, Set14, B100 and Urban100. {\color{red}Red color} indicates the best performance and {\color{blue}blue color} indicates the second best one.}
 \end{center}
-\caption{PSNR for scale factor $\times$2, $\times$3 and $\times$4 on datasets `Set5', `Set14', `Urban100', and `B100'. {\color{red} Red color} indicates the best performance and {\color{blue}blue color} indicates the second best one.} \label{table_all}
 \end{table*}
+
 
 \section{Experimental Results}
 In this section, we evaluate the performance of our method on several datasets. We first describe datasets used for training and testing our method. Next, parameters necessary for training are given. 
