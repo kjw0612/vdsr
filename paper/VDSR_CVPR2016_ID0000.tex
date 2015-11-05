@@ -174,7 +174,43 @@ It turns out that zero-padding works surprisingly well. For this reason our meth
 
 Once image details are predicted, they are added back to ILR to give the final result (HR). We use this structure for all experiments in our work.  
 
-
+\begin{table*}
+\centering
+\begin{subtable}[t]{0.9\linewidth}
+\centering
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|}
+\hline
+ Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
+ Residual& 36.90& 36.64& 37.10& 37.12& 37.08& 37.02& 37.05& 37.05\\
+ Non-Residual& 27.42& 19.59& 32.65& 31.38& 31.87& 34.22& 35.80& 35.66\\\hline
+ Difference& 9.48& 17.05& 4.45& 5.74& 5.20& 2.80& 1.26& 1.39\\\hline
+\end{tabular}
+\caption{Initial learning rate 0.1}
+\end{subtable}
+\begin{subtable}[t]{0.9\linewidth}
+\centering
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|}
+\hline
+ Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
+ Residual& 36.74& 36.87& 36.92& 36.91& 36.93& 36.93& 36.93& 36.93\\
+ Non-Residual& 30.33& 33.59& 36.25& 36.26& 36.41& 36.41& 36.42& 36.42\\\hline
+ Difference& 6.41& 3.28& 0.66& 0.65& 0.52& 0.52& 0.52& 0.52\\\hline
+\end{tabular}
+\caption{Initial learning rate 0.01}
+\end{subtable}
+\begin{subtable}[t]{0.9\linewidth}
+\centering
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|}
+\hline
+ Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
+ Residual& 36.31& 36.46& 36.50& 36.52& 36.52& 36.52& 36.52& 36.52\\
+ Non-Residual& 33.97& 35.08& 36.05& 36.11& 36.11& 36.11& 36.11& 36.11\\\hline
+ Difference& 2.35& 1.38& 0.45& 0.42& 0.41& 0.40& 0.40& 0.40\\\hline
+\end{tabular}
+\caption{Initial learning rate 0.001}
+\end{subtable}
+\caption{Performance table for residual and non-residual networks. Two networks are tested under `Set5' dataset with scale factor 2.}
+\end{table*}
 
 
 \begin{figure*}[t]
