@@ -8,6 +8,11 @@
 \usepackage{amssymb}
 \usepackage{subcaption}
 \usepackage{multirow}
+\usepackage[space]{grffile}
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{chngpage}
+
 
 % Include other packages here, before hyperref.
 
@@ -86,6 +91,13 @@ Recently, sophisticated learning methods are widely used to model a mapping from
 Among them, Dong et al. \cite{Dong2014} has demonstrated that a CNN can be used to learn a mapping from LR to HR in an end-to-end manner. Their method, termed SRCNN, does not require any engineered features that are typically necessary in other methods \cite{yang2010image,zeyde2012single,Timofte2013,Timofte}. In addition, it is very fast and accurate.
 
 While SRCNN successfully introduced a deep learning technique into the super-resolution (SR) problem, we find its limitations in three aspects: first, it relies on context of small image regions; second, training converges slowly; third, the network only works for single-scale.
+
+\begin{figure}
+\centering
+{\graphicspath{{figs/figf/}}\includegraphics[width=7cm]{frontfig}}
+\caption{Our VDSR shows the best PSNR and runtime scale factor $\times2$ on dataset `Set14' in comparison to the other state-of-the-art methods.}
+\end{figure}
+
 
 In this work, we propose a new method to practically resolve the issues.
 
@@ -171,6 +183,45 @@ This methodology, however, is not valid if required surround region is very big.
 To resolve this issue, we pad zeros before convolutions to keep the sizes of all feature maps (including the output image) the same. It turns out that zero-padding works surprisingly well. For this reason our method differs from most other methods in the sense that pixels near image boundary are also correctly predicted.  
 
 Once image details are predicted, they are added back to ILR to give the final result (HR). We use this structure for all experiments in our work.  
+
+
+\begin{table*}
+\centering
+\begin{subtable}[t]{0.9\linewidth}
+\centering
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|}
+\hline
+ Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
+ Residual& 36.90& 36.64& 37.10& 37.12& 37.08& 37.02& 37.05& 37.05\\
+ Non-Residual& 27.42& 19.59& 32.65& 31.38& 31.87& 34.22& 35.80& 35.66\\\hline
+ Difference& 9.48& 17.05& 4.45& 5.74& 5.20& 2.80& 1.26& 1.39\\\hline
+\end{tabular}
+\caption{Initial learning rate 0.1}
+\end{subtable}
+\begin{subtable}[t]{0.9\linewidth}
+\centering
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|}
+\hline
+ Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
+ Residual& 36.74& 36.87& 36.92& 36.91& 36.93& 36.93& 36.93& 36.93\\
+ Non-Residual& 30.33& 33.59& 36.25& 36.26& 36.41& 36.41& 36.42& 36.42\\\hline
+ Difference& 6.41& 3.28& 0.66& 0.65& 0.52& 0.52& 0.52& 0.52\\\hline
+\end{tabular}
+\caption{Initial learning rate 0.01}
+\end{subtable}
+\begin{subtable}[t]{0.9\linewidth}
+\centering
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|}
+\hline
+ Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
+ Residual& 36.31& 36.46& 36.50& 36.52& 36.52& 36.52& 36.52& 36.52\\
+ Non-Residual& 33.97& 35.08& 36.05& 36.11& 36.11& 36.11& 36.11& 36.11\\\hline
+ Difference& 2.35& 1.38& 0.45& 0.42& 0.41& 0.40& 0.40& 0.40\\\hline
+\end{tabular}
+\caption{Initial learning rate 0.001}
+\end{subtable}
+\caption{Performance table for residual and non-residual networks. Two networks are tested under `Set5' dataset with scale factor 2.}
+\end{table*}
 
 \begin{figure*}[t]
 	\centering
@@ -310,89 +361,124 @@ Another pattern is that for large scales ($\times 3,4$), our multi-scale network
 
 
 \begin{figure*}
+\begin{adjustwidth}{0cm}{-0.5cm}
 \begin{center}
-\begin{tabular}{ccccc}
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_1_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_6_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_7_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_10_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_9_w.png} 
-\\
-Original / PSNR (dB) &A+ / 29.84 &SRCNN / 29.20 &Huang et al. / 30.17 &RCN (Ours) / 30.86 \\
-\end{tabular}
-\end{center}
-\vspace{-.5cm}
-\caption{Super-resolution results (Urban100) with scale factor $\times$4 Our result is visually pleasing. }\label{fig:c1}
-\end{figure*}
-
-\begin{figure*}
-\begin{center}
-\begin{tabular}{cccc}
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_053_1_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_053_6_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_053_7_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_053_9_w.png} 
-\\
-Original / PSNR (dB) &A+ / 22.31 &SRCNN / 22.34 &RCN (Ours) / 23.13 \\
-\end{tabular}
-\end{center}
-\vspace{-.5cm}
-\caption{Super-resolution results (Urban100) with scale factor $\times$3. Our result is visually pleasing.}\label{fig:c2}
-\end{figure*}
-
-
-\begin{figure*}
-\begin{center}
-\begin{tabular}{cccc}
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_058_1_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_058_6_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_058_7_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_058_9_w.png} 
-\\
-Original / PSNR (dB) &A+ / 25.87 &SRCNN / 25.76 &RCN (Ours) / 26.57 \\
-\end{tabular}
-\end{center}
-\vspace{-.5cm}
-\caption{Super-resolution results (Urban100) with scale factor $\times$3. Our result is visually pleasing.}\label{fig:c3}
-\end{figure*}
-
-\begin{table*}
 \footnotesize
-\begin{center}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| }
-\hline
-\multirow{2}{*}{Dataset} & \multirow{2}{*}{Scale} & {Bicubic} & {A+} & {SRCNN} & {Huang et al.} & {RCN} & {RCN-291} & {RCN+} & {RCN-291+ (Ours)}\\ 
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{ c C{3.5cm}  C{3.5cm}  C{3.5cm}  }
+\multirow{4}{*}{\graphicspath{{figs/fig1/}}\includegraphics[width=0.17\textwidth]{img039_GTbox.png}}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_HR.png}}\vspace{0.3ex}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_A+.png}}\vspace{0.3ex}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_RFL.png}}\vspace{0.3ex}
+\\
+& Original (PSNR, SSIM)& A+ (22.74, 0.7234)& RFL (22.54, 0.7092)\\
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SelfEx.png}}\vspace{0.3ex}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SRCNN.png}}\vspace{0.3ex}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_VDSR.png}}\vspace{0.3ex}
+\\
+& SelfEx (22.79, {\color{blue}{0.7341}})& SRCNN ({\color{blue}{22.84}}, 0.7248)& VDSR (Ours) ({\color{red}{23.91}}, {\color{red}{0.7858}})\\
+\end{tabular}
+\caption{Super-resolution results of ``img039"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
+\end{center}
+\end{adjustwidth}
+\end{figure*}
 
- &  & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time & PSNR/Time\\ 
+\begin{figure*}
+\begin{adjustwidth}{0.5cm}{0.5cm}
+\begin{center}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{  c  c  c  c  c  c  }
+{\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_HR.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_A+.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_RFL.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_SelfEx.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_SRCNN.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_VDSR.png}}
+\\
+Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
+(PSNR, SSIM)& (26.87, 0.8324)& (26.68, 0.8218)& ({\color{blue}{26.93}}, {\color{blue}{0.8337}})& (26.92, 0.8299)& ({\color{red}{28.31}}, {\color{red}{0.8753}})\\
+\end{tabular}
+\caption{Super-resolution results of ``img002"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
+\end{center}
+\end{adjustwidth}
+\end{figure*}
+
+\begin{figure*}
+\begin{adjustwidth}{0.5cm}{0.5cm}
+\begin{center}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{  c  c  c  c  c  c  }
+{\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_HR.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_A+.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_RFL.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_SelfEx.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_SRCNN.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_VDSR.png}}
+\\
+Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
+(PSNR, SSIM)& (32.49, 0.9425)& (32.35, 0.9389)& ({\color{blue}{33.21}}, {\color{blue}{0.9453}})& (32.59, 0.9409)& ({\color{red}{34.37}}, {\color{red}{0.9550}})\\
+\end{tabular}
+\caption{Super-resolution results of ``img082"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
+\end{center}
+\end{adjustwidth}
+\end{figure*}
+
+
+\subsection{High Depths for Large Contexts}
+In this section, we study the depth of a convolutional neural network (CNN) in the context of super-resolution. We first start with the definition of receptive field in a CNN. 
+
+CNNs exploit spatially-local correlation by enforcing a local connectivity pattern between neurons of adjacent layers \cite{Bengio-et-al-2015-Book}. In other words, hidden units in layer $m$ take as input a subset of units in layer $m-1$. They form spatially contiguous receptive fields (Figure \ref{fig:receptive_field}).
+
+Imagine that layer $m-1$ is the input image. In the figure, units in layer $m$ have receptive fields of 3$\times$3 in the input and are thus only connected to 9 adjacent neurons in the input layer. Units in layer $m+1$ have a similar connectivity with the layer below. We say that their receptive field with respect to the layer below is 3$\times$3, but their receptive field with respect to the input is larger (5$\times$5). Each unit is unresponsive to variations outside of its receptive field with respect to the input. The architecture thus ensures that the learned filters produce the strongest response to a spatially local input pattern.
+
+However, as shown above, stacking many such layers leads to filters that become increasingly “global” (i.e. responsive to a larger region of pixel space). For example, the unit in hidden layer $m+1$ can encode a non-linear feature of 5$\times$5 (in terms of image pixel space).
+
+In this work, we use small filters of the same size 3$\times$3 for all layers. For the first layer, its receptive field is of size 3$\times$3. For the next layers, the size of its receptive field increases by 2 in both height and width. For depth $M$ network, its receptive field has size $(2M+1)\times(2M+1)$. Its size is proportional to the depth.
+
+In the task of SR, this corresponds to the amount of contextual information that can be exploited to infer high-frequency components. Large receptive field means the network can use more context from large image region to predict details of an image. As SR is an ill-posed inverse problem, collecting and analyzing more neighbor pixels give more clues. For example, if there are some image patterns entirely contained in a receptive field, it is plausible that this pattern is recognized and used to super-resolve the image. 
+
+We now experimentally show that very deep networks significantly improve performance.  Since our layers are of the same type, we train and test networks of depth ranging from 5 to 20 (only counting weight layers excluding nonlinearity layers). 
+
+In Figure \ref{fig:depth}, we show the results. In most cases, performance increases as depth increases. The exception is scale factor 2. As depth increases, performance on scale factors 3 and 4 improve rapidly. Since we use Euclidean loss, it tends to correct severe errors first, which are more prevalent in high scale factors. Different loss functions can be explored to balance the importance between scales and these are left as a future work. 
+
+
+>>>>>>> 6709f97446d8afd81ddc47a75d24df6bbf611c6a
+\begin{table*}
+\begin{center}
+\setlength{\tabcolsep}{2pt}
+\footnotesize
+\begin{tabular}{ | c | c | c | c | c | c | c | c | }
+\hline
+\multirow{2}{*}{Dataset} & \multirow{2}{*}{Scale} & Bicubic & A+ & RFL & SelfEx & SRCNN & VDSR (Ours)\\
+ & & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time\\
 \hline
 \hline
-\multirow{3}{*}{Set5}
-& $\times$2& 33.66 / - & 36.55 / 0.44& 36.66 / 2.12& -& 37.06 / 0.31& \color{blue} 37.38 / 0.15& 37.24 / 0.18& \color{red} 37.53 / 0.19\\
-& $\times$3& 30.39 / - & 32.59 / 0.23& 32.75 / 2.13& -& 33.27 / 0.22& 33.42 / 0.15& \color{blue} 33.50 / 0.18& \color{red} 33.67 / 0.19\\
-& $\times$4& 28.42 / - & 30.28 / 0.16& 30.49 / 2.21& -& 30.95 / 0.22& 31.09 / 0.15& \color{blue} 31.22 / 0.18& \color{red} 31.35 / 0.19\\
+\multirow{3}{*}{Set5} & $\times$2 & 33.66/0.9299/0.00 & 36.54/{\color{blue}0.9544}/{\color{blue}0.58} & 36.54/0.9537/0.63 & 36.49/0.9537/45.78 & {\color{blue}36.66}/0.9542/2.19 & {\color{red}37.53}/{\color{red}0.9587}/{\color{red}0.13}\\
+ & $\times$3 & 30.39/0.8682/0.00 & 32.58/0.9088/{\color{blue}0.32} & 32.43/0.9057/0.49 & 32.58/{\color{blue}0.9093}/33.44 & {\color{blue}32.75}/0.9090/2.23 & {\color{red}33.66}/{\color{red}0.9213}/{\color{red}0.13}\\
+ & $\times$4 & 28.42/0.8104/0.00 & 30.28/0.8603/{\color{blue}0.24} & 30.14/0.8548/0.38 & 30.31/0.8619/29.18 & {\color{blue}30.48}/{\color{blue}0.8628}/2.19 & {\color{red}31.35}/{\color{red}0.8838}/{\color{red}0.12}\\
 \hline
 \hline
-\multirow{3}{*}{Set14}
-& $\times$2& 30.23 / - & 32.28 / 0.92& 32.45 / 3.79& -& 32.61 / 0.32& \color{blue} 32.84 / 0.21& 32.77 / 0.26& \color{red} 33.04 / 0.27\\
-& $\times$3& 27.54 / - & 29.13 / 0.48& 29.30 / 3.78& -& 29.48 / 0.32& 29.63 / 0.21& \color{blue} 29.64 / 0.26& \color{red} 29.77 / 0.27\\
-& $\times$4& 26.00 / - & 27.32 / 0.34& 27.50 / 3.80& -& 27.71 / 0.32& 27.85 / 0.21& \color{blue} 27.91 / 0.26& \color{red} 28.01 / 0.27\\
+\multirow{3}{*}{Set14} & $\times$2 & 30.24/0.8688/0.00 & 32.28/0.9056/{\color{blue}0.86} & 32.26/0.9040/1.13 & 32.22/0.9034/105.00 & {\color{blue}32.42}/{\color{blue}0.9063}/4.32 & {\color{red}33.03}/{\color{red}0.9124}/{\color{red}0.25}\\
+ & $\times$3 & 27.55/0.7742/0.00 & 29.13/0.8188/{\color{blue}0.56} & 29.05/0.8164/0.85 & 29.16/0.8196/74.69 & {\color{blue}29.28}/{\color{blue}0.8209}/4.40 & {\color{red}29.77}/{\color{red}0.8314}/{\color{red}0.26}\\
+ & $\times$4 & 26.00/0.7027/0.00 & 27.32/0.7491/{\color{blue}0.38} & 27.24/0.7451/0.65 & 27.40/{\color{blue}0.7518}/65.08 & {\color{blue}27.49}/0.7503/4.39 & {\color{red}28.01}/{\color{red}0.7674}/{\color{red}0.25}\\
 \hline
 \hline
-\multirow{3}{*}{Urban100}
-& $\times$2& 26.61 / - & 28.57 / 3.15& 28.82 / 12.78& -& 29.22 / 0.76& \color{blue} 29.52 / 0.51& 29.41 / 0.67& \color{red} 29.76 / 0.68\\
-& $\times$3& 24.36 / - & 25.82 / 1.68& 25.99 / 12.85& -& 26.35 / 0.76& 26.52 / 0.51& \color{blue} 26.53 / 0.67& \color{red} 26.76 / 0.68\\
-& $\times$4& 23.07 / - & 24.22 / 1.17& 24.40 / 12.60& 24.55 / -& 24.62 / 0.77& 24.78 / 0.51& \color{blue} 24.82 / 0.67& \color{red} 24.99 / 0.68\\
+\multirow{3}{*}{B100} & $\times$2 & 29.56/0.8431/0.00 & 31.21/0.8863/{\color{blue}0.59} & 31.16/0.8840/0.80 & 31.18/0.8855/60.09 & {\color{blue}31.36}/{\color{blue}0.8879}/2.51 & {\color{red}31.90}/{\color{red}0.8960}/{\color{red}0.16}\\
+ & $\times$3 & 27.21/0.7385/0.00 & 28.29/0.7835/{\color{blue}0.33} & 28.22/0.7806/0.62 & 28.29/0.7840/40.01 & {\color{blue}28.41}/{\color{blue}0.7863}/2.58 & {\color{red}28.82}/{\color{red}0.7976}/{\color{red}0.21}\\
+ & $\times$4 & 25.96/0.6675/0.00 & 26.82/0.7087/{\color{blue}0.26} & 26.75/0.7054/0.48 & 26.84/{\color{blue}0.7106}/35.87 & {\color{blue}26.90}/0.7101/2.51 & {\color{red}27.29}/{\color{red}0.7251}/{\color{red}0.21}\\
 \hline
 \hline
-\multirow{3}{*}{B100}
-& $\times$2& 29.32 / - & 30.77 / 0.58& 30.89 / 2.43& 30.70 / -& 31.02 / 0.25& \color{blue} 31.21 / 0.17& 31.13 / 0.21& \color{red} 31.30 / 0.22\\
-& $\times$3& 27.15 / - & 28.18 / 0.31& 28.28 / 2.48& 28.10 / -& 28.42 / 0.25& \color{blue} 28.55 / 0.17& 28.52 / 0.21& \color{red} 28.64 / 0.22\\
-& $\times$4& 25.92 / - & 26.77 / 0.22& 26.84 / 2.39& 26.74 / -& 26.98 / 0.25& \color{blue} 27.10 / 0.17& 27.08 / 0.20& \color{red} 27.20 / 0.21\\
+\multirow{3}{*}{Urban100} & $\times$2 & 26.88/0.8403/0.00 & 29.20/0.8938/{\color{blue}2.96} & 29.11/0.8904/3.62 & {\color{blue}29.54}/{\color{blue}0.8967}/410.23 & 29.50/0.8946/22.12 & {\color{red}30.76}/{\color{red}0.9140}/{\color{red}0.98}\\
+ & $\times$3 & 24.46/0.7349/0.00 & 26.03/0.7973/{\color{blue}1.67} & 25.86/0.7900/2.48 & {\color{blue}26.44}/{\color{blue}0.8088}/462.93 & 26.24/0.7989/19.35 & {\color{red}27.14}/{\color{red}0.8279}/{\color{red}1.08}\\
+ & $\times$4 & 23.14/0.6577/0.00 & 24.32/0.7183/{\color{blue}1.21} & 24.19/0.7096/1.88 & {\color{blue}24.79}/{\color{blue}0.7374}/392.72 & 24.52/0.7221/18.46 & {\color{red}25.18}/{\color{red}0.7524}/{\color{red}1.06}\\
 \hline
 \end{tabular}
+\caption{Average PSNR/SSIM for scale factor $\times$2, $\times$3 and $\times$4 on datasets Set5, Set14, B100 and Urban100. {\color{red}Red color} indicates the best performance and {\color{blue}blue color} indicates the second best one.}
 \end{center}
-\caption{PSNR for scale factor $\times$2, $\times$3 and $\times$4 on datasets `Set5', `Set14', `Urban100', and `B100'. {\color{red} Red color} indicates the best performance and {\color{blue}blue color} indicates the second best one.} \label{table_all}
 \end{table*}
+
 
 \section{Experimental Results}
 In this section, we evaluate the performance of our method on several datasets. We first describe datasets used for training and testing our method. Next, parameters necessary for training are given. 
