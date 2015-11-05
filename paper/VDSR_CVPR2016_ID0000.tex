@@ -8,6 +8,11 @@
 \usepackage{amssymb}
 \usepackage{subcaption}
 \usepackage{multirow}
+\usepackage[space]{grffile}
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{chngpage}
+
 
 % Include other packages here, before hyperref.
 
@@ -297,51 +302,71 @@ In short, this simple modification to a standard network structure is beneficial
 
 
 \begin{figure*}
+\begin{adjustwidth}{0cm}{-0.5cm}
 \begin{center}
-\begin{tabular}{ccccc}
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_1_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_6_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_7_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_10_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.18\textwidth]{img_082_9_w.png} 
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{ c C{3.5cm}  C{3.5cm}  C{3.5cm}  }
+\multirow{4}{*}{\graphicspath{{figs/fig1/}}\includegraphics[width=0.17\textwidth]{img039_GTbox.png}}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_HR.png}}\vspace{0.3ex}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_A+.png}}\vspace{0.3ex}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_RFL.png}}\vspace{0.3ex}
 \\
-Original / PSNR (dB) &A+ / 29.84 &SRCNN / 29.20 &Huang et al. / 30.17 &RCN (Ours) / 30.86 \\
+& Original (PSNR, SSIM)& A+ (22.74, 0.7234)& RFL (22.54, 0.7092)\\
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SelfEx.png}}\vspace{0.3ex}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SRCNN.png}}\vspace{0.3ex}
+& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_VDSR.png}}\vspace{0.3ex}
+\\
+& SelfEx (22.79, {\color{blue}{0.7341}})& SRCNN ({\color{blue}{22.84}}, 0.7248)& VDSR (Ours) ({\color{red}{23.91}}, {\color{red}{0.7858}})\\
 \end{tabular}
+\caption{Super-resolution results of ``img039"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
 \end{center}
-\vspace{-.5cm}
-\caption{Super-resolution results (Urban100) with scale factor $\times$4 Our result is visually pleasing. }\label{fig:c1}
+\end{adjustwidth}
 \end{figure*}
 
 \begin{figure*}
+\begin{adjustwidth}{0.5cm}{0.5cm}
 \begin{center}
-\begin{tabular}{cccc}
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_053_1_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_053_6_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_053_7_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_053_9_w.png} 
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{  c  c  c  c  c  c  }
+{\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_HR.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_A+.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_RFL.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_SelfEx.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_SRCNN.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_VDSR.png}}
 \\
-Original / PSNR (dB) &A+ / 22.31 &SRCNN / 22.34 &RCN (Ours) / 23.13 \\
+Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
+(PSNR, SSIM)& (26.87, 0.8324)& (26.68, 0.8218)& ({\color{blue}{26.93}}, {\color{blue}{0.8337}})& (26.92, 0.8299)& ({\color{red}{28.31}}, {\color{red}{0.8753}})\\
 \end{tabular}
+\caption{Super-resolution results of ``img002"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
 \end{center}
-\vspace{-.5cm}
-\caption{Super-resolution results (Urban100) with scale factor $\times$3. Our result is visually pleasing.}\label{fig:c2}
+\end{adjustwidth}
 \end{figure*}
-
 
 \begin{figure*}
+\begin{adjustwidth}{0.5cm}{0.5cm}
 \begin{center}
-\begin{tabular}{cccc}
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_058_1_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_058_6_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_058_7_w.png} &
-\graphicspath{{figs/}}\includegraphics[width=0.23\textwidth]{img_058_9_w.png} 
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{  c  c  c  c  c  c  }
+{\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_HR.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_A+.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_RFL.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_SelfEx.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_SRCNN.png}}
+& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_VDSR.png}}
 \\
-Original / PSNR (dB) &A+ / 25.87 &SRCNN / 25.76 &RCN (Ours) / 26.57 \\
+Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
+(PSNR, SSIM)& (32.49, 0.9425)& (32.35, 0.9389)& ({\color{blue}{33.21}}, {\color{blue}{0.9453}})& (32.59, 0.9409)& ({\color{red}{34.37}}, {\color{red}{0.9550}})\\
 \end{tabular}
+\caption{Super-resolution results of ``img082"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
 \end{center}
-\vspace{-.5cm}
-\caption{Super-resolution results (Urban100) with scale factor $\times$3. Our result is visually pleasing.}\label{fig:c3}
+\end{adjustwidth}
 \end{figure*}
+
+
 
 \subsection{High Depths for Large Contexts}
 In this section, we study the depth of a convolutional neural network (CNN) in the context of super-resolution. We first start with the definition of receptive field in a CNN. 
