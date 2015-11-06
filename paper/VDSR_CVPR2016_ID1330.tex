@@ -210,34 +210,34 @@ We implement our model using the \textit{MatConvNet}\footnote{\url{ http://www.v
 \centering
 \begin{subtable}[t]{0.9\linewidth}
 \centering
-\begin{tabular}{|c||c|c|HcHHH|c|}
+\begin{tabular}{|c||c|c|c|c|}
 \hline
- Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
- Residual& \color{red}36.90& 36.64& 37.10& 37.12& 37.08& 37.02& 37.05&  37.05\\
- Non-Residual&  \color{red}27.42& 19.59& 32.65& 31.38& 31.87& 34.22& 35.80& 35.66\\\hline
- Difference&  \color{red} 9.48& 17.05& 4.45& 5.74& 5.20& 2.80& 1.26& 1.39\\\hline
+ Epoch& 10& 20 & 40 & 80\\\hline
+ Residual& \color{red}36.90& 36.64& 37.12&  37.05\\
+ Non-Residual&  \color{red}27.42& 19.59& 31.38& 35.66\\\hline
+ Difference&  \color{red} 9.48& 17.05& 5.74 & 1.39\\\hline
 \end{tabular}
 \caption{Initial learning rate 0.1}
 \end{subtable}
 \begin{subtable}[t]{0.9\linewidth}
 \centering
-\begin{tabular}{|c||c|c|HcHHH|c|}
+\begin{tabular}{|c||c|c|c|c|}
 \hline
- Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
- Residual& \color{red}36.74& 36.87& 36.92& 36.91& 36.93& 36.93& 36.93&  36.93\\
- Non-Residual& \color{red}30.33& 33.59& 36.25& 36.26& 36.41& 36.41& 36.42&  36.42\\\hline
- Difference& \color{red}6.41& 3.28& 0.66& 0.65& 0.52& 0.52& 0.52&  0.52\\\hline
+ Epoch& 10& 20 & 40 & 80\\\hline
+ Residual& \color{red}36.74& 36.87& 36.91&  36.93\\
+ Non-Residual& \color{red}30.33& 33.59& 36.26&  36.42\\\hline
+ Difference& \color{red}6.41& 3.28& 0.65& 0.52\\\hline
 \end{tabular}
 \caption{Initial learning rate 0.01}
 \end{subtable}
 \begin{subtable}[t]{0.9\linewidth}
 \centering
-\begin{tabular}{|c||c|c|HcHHH|c|}
+\begin{tabular}{|c||c|c|c|c|}
 \hline
- Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
- Residual& \color{red}36.31& 36.46& 36.50& 36.52& 36.52& 36.52& 36.52&  36.52\\
- Non-Residual& \color{red}33.97& 35.08& 36.05& 36.11& 36.11& 36.11& 36.11&  36.11\\\hline
- Difference& \color{red}2.35& 1.38& 0.45& 0.42& 0.41& 0.40& 0.40&  0.40\\\hline
+ Epoch& 10& 20 & 40 & 80\\\hline
+ Residual& \color{red}36.31& 36.46& 36.52& 36.52\\
+ Non-Residual& \color{red}33.97& 35.08& 36.11&  36.11\\\hline
+ Difference& \color{red}2.35& 1.38& 0.42& 0.40\\\hline
 \end{tabular}
 \caption{Initial learning rate 0.001}
 \end{subtable}
@@ -347,46 +347,44 @@ We now experimentally show that very deep networks significantly improve SR perf
 %\end{figure*}
 
 \begin{figure*}
-\vspace{-.5cm}
 \begin{adjustwidth}{0.5cm}{0.5cm}
 \begin{center}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{  c  c  c  c  c  c  }
-{\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_HR.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_A+.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_RFL.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_SelfEx.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_SRCNN.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_VDSR.png}}
+{\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_HR.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_A+.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_RFL.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_SelfEx.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_SRCNN.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_VDSR.png}}
 \\
-Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
-(PSNR, SSIM)& (26.87, 0.8324)& (26.68, 0.8218)& ({\color{blue}{26.93}}, {\color{blue}{0.8337}})& (26.92, 0.8299)& ({\color{red}{28.31}}, {\color{red}{0.8753}})\\
+Ground Truth& A+\cite{Timofte}& RFL\cite{schulter2015fast}& SelfEx\cite{Huang-CVPR-2015}& SRCNN\cite{Dong2014}& VDSR (Ours) \\
+(PSNR, SSIM)& (22.92, 0.7379)& (22.90, 0.7332)& (23.00, 0.7439)& ({\color{blue}{23.15}}, {\color{blue}{0.7487}})& ({\color{red}{23.50}}, {\color{red}{0.7777}})\\
 \end{tabular}
-\caption{Super-resolution results of ``img002"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
+\caption{Super-resolution results of ``148026"(\textit{B100}) with scale factor $\times$3. Our result is visually pleasing.}
 \label{fig:c2}
 \end{center}
 \end{adjustwidth}
 \end{figure*}
 
 \begin{figure*}
-\vspace{-.5cm}
 \begin{adjustwidth}{0.5cm}{0.5cm}
 \begin{center}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{  c  c  c  c  c  c  }
-{\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_HR.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_A+.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_RFL.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_SelfEx.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_SRCNN.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_VDSR.png}}
+{\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_HR.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_A+.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_RFL.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_SelfEx.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_SRCNN.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_VDSR.png}}
 \\
-Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
-(PSNR, SSIM)& (32.49, 0.9425)& (32.35, 0.9389)& ({\color{blue}{33.21}}, {\color{blue}{0.9453}})& (32.59, 0.9409)& ({\color{red}{34.37}}, {\color{red}{0.9550}})\\
+Ground Truth& A+\cite{Timofte}& RFL\cite{schulter2015fast}& SelfEx\cite{Huang-CVPR-2015}& SRCNN\cite{Dong2014}& VDSR (Ours) \\
+(PSNR, SSIM)& (27.08, 0.7514)& (27.08, 0.7508)& (27.02, 0.7513)& ({\color{blue}{27.16}}, {\color{blue}{0.7545}})& ({\color{red}{27.32}}, {\color{red}{0.7606}})\\
 \end{tabular}
-\caption{Super-resolution results of ``img082"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
+\caption{Super-resolution results of ``38092"(\textit{B100}) with scale factor $\times$3. Our result is visually pleasing.}
 \label{fig:c3}
 \end{center}
 \end{adjustwidth}
@@ -398,7 +396,7 @@ Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
 \small
 \begin{tabular}{ | c | c | c | c | c | c | c | c | }
 \hline
-\multirow{2}{*}{Dataset} & \multirow{2}{*}{Scale} & Bicubic & A+ & RFL & SelfEx & SRCNN & VDSR (Ours)\\
+\multirow{2}{*}{Dataset} & \multirow{2}{*}{Scale} & Bicubic & A+\cite{Timofte} & RFL\cite{schulter2015fast} & SelfEx\cite{Huang-CVPR-2015} & SRCNN\cite{Dong2014} & VDSR (Ours)\\
  & & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time & PSNR/SSIM/time\\
 \hline
 \hline
