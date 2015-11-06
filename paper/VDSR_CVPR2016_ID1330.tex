@@ -317,24 +317,22 @@ In addition, very deep networks can exploit high nonlinearities. We use 19 recti
 We now experimentally show that very deep networks significantly improve SR performance. We train and test networks of depth ranging from 5 to 20 (only counting weight layers excluding nonlinearity layers). In Figure \ref{fig:depth}, we show the results. In most cases, performance increases as depth increases. As depth increases, performance improves rapidly. 
 
 \begin{figure*}
-\begin{adjustwidth}{0cm}{-0.5cm}
+\begin{adjustwidth}{0.5cm}{0.5cm}
 \begin{center}
-\footnotesize
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{ c C{3.5cm}  C{3.5cm}  C{3.5cm}  }
-\multirow{4}{*}{\graphicspath{{figs/fig1/}}\includegraphics[width=0.17\textwidth]{img039_GTbox.png}}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_HR.png}}\vspace{0.3ex}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_A+.png}}\vspace{0.3ex}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_RFL.png}}\vspace{0.3ex}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{  c  c  c  c  c  c  }
+{\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_HR.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_A+.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_RFL.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_SelfEx.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_SRCNN.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{148026_for_figVDSR_VDSR.png}}
 \\
-& Original (PSNR, SSIM)& A+ (22.74, 0.7234)& RFL (22.54, 0.7092)\\
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SelfEx.png}}\vspace{0.3ex}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SRCNN.png}}\vspace{0.3ex}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_VDSR.png}}\vspace{0.3ex}
-\\
-& SelfEx (22.79, {\color{blue}{0.7341}})& SRCNN ({\color{blue}{22.84}}, 0.7248)& VDSR (Ours) ({\color{red}{23.91}}, {\color{red}{0.7858}})\\
+Ground Truth& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
+(PSNR, SSIM)& (22.92, 0.7379)& (22.90, 0.7332)& (23.00, 0.7439)& ({\color{blue}{23.15}}, {\color{blue}{0.7487}})& ({\color{red}{23.50}}, {\color{red}{0.7777}})\\
 \end{tabular}
-\caption{Super-resolution results of ``img039"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
+\caption{Super-resolution results of ``148026"(\textit{B100}) with scale factor $\times$3. Our result is visually pleasing.}
 \label{fig:c1}
 \end{center}
 \end{adjustwidth}
@@ -346,43 +344,22 @@ We now experimentally show that very deep networks significantly improve SR perf
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{  c  c  c  c  c  c  }
-{\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_HR.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_A+.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_RFL.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_SelfEx.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_SRCNN.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img002_for_fig2_VDSR.png}}
+{\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_HR.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_A+.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_RFL.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_SelfEx.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_SRCNN.png}}
+& {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_VDSR.png}}
 \\
-Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
-(PSNR, SSIM)& (26.87, 0.8324)& (26.68, 0.8218)& ({\color{blue}{26.93}}, {\color{blue}{0.8337}})& (26.92, 0.8299)& ({\color{red}{28.31}}, {\color{red}{0.8753}})\\
+Ground Truth& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
+(PSNR, SSIM)& (27.08, 0.7514)& (27.08, 0.7508)& (27.02, 0.7513)& ({\color{blue}{27.16}}, {\color{blue}{0.7545}})& ({\color{red}{27.32}}, {\color{red}{0.7606}})\\
 \end{tabular}
-\caption{Super-resolution results of ``img002"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
+\caption{Super-resolution results of ``38092"(\textit{B100}) with scale factor $\times$3. Our result is visually pleasing.}
 \label{fig:c2}
 \end{center}
 \end{adjustwidth}
 \end{figure*}
 
-\begin{figure*}
-\begin{adjustwidth}{0.5cm}{0.5cm}
-\begin{center}
-\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{  c  c  c  c  c  c  }
-{\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_HR.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_A+.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_RFL.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_SelfEx.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_SRCNN.png}}
-& {\graphicspath{{figs/fig2/}}\includegraphics[width=0.15\textwidth]{img082_for_fig2_VDSR.png}}
-\\
-Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
-(PSNR, SSIM)& (32.49, 0.9425)& (32.35, 0.9389)& ({\color{blue}{33.21}}, {\color{blue}{0.9453}})& (32.59, 0.9409)& ({\color{red}{34.37}}, {\color{red}{0.9550}})\\
-\end{tabular}
-\caption{Super-resolution results of ``img082"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
-\label{fig:c3}
-\end{center}
-\end{adjustwidth}
-\end{figure*}
 
 \begin{table*}
 \begin{center}
