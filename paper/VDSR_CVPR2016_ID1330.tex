@@ -13,6 +13,8 @@
 \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
 \usepackage{chngpage}
 
+\newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
+
 
 % Include other packages here, before hyperref.
 
@@ -203,11 +205,12 @@ We implement our model using the \textit{MatConvNet}\footnote{\url{ http://www.v
 \end{figure*}
 
 
-\begin{table*}
+\begin{table}
+\vspace{-.5cm}
 \centering
 \begin{subtable}[t]{0.9\linewidth}
 \centering
-\begin{tabular}{|c||c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c||c|c|HcHHH|c|}
 \hline
  Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
  Residual& \color{red}36.90& 36.64& 37.10& 37.12& 37.08& 37.02& 37.05&  37.05\\
@@ -218,7 +221,7 @@ We implement our model using the \textit{MatConvNet}\footnote{\url{ http://www.v
 \end{subtable}
 \begin{subtable}[t]{0.9\linewidth}
 \centering
-\begin{tabular}{|c||c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c||c|c|HcHHH|c|}
 \hline
  Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
  Residual& \color{red}36.74& 36.87& 36.92& 36.91& 36.93& 36.93& 36.93&  36.93\\
@@ -229,7 +232,7 @@ We implement our model using the \textit{MatConvNet}\footnote{\url{ http://www.v
 \end{subtable}
 \begin{subtable}[t]{0.9\linewidth}
 \centering
-\begin{tabular}{|c||c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c||c|c|HcHHH|c|}
 \hline
  Epoch& 10& 20& 30& 40& 50& 60& 70& 80\\\hline
  Residual& \color{red}36.31& 36.46& 36.50& 36.52& 36.52& 36.52& 36.52&  36.52\\
@@ -239,9 +242,10 @@ We implement our model using the \textit{MatConvNet}\footnote{\url{ http://www.v
 \caption{Initial learning rate 0.001}
 \end{subtable}
 \caption{Performance table (PSNR) for residual and non-residual networks (`Set5' dataset, $\times$ 2). Residual networks rapidly approach their convergence within 10 epochs.}
-\end{table*}
+\end{table}
 
 \begin{figure*}[t]
+\vspace{-.3cm}
 	\centering
 	\begin{subfigure}{0.3\textwidth}
 		\includegraphics[width=\textwidth]{figs/residual_exp0}
@@ -286,6 +290,7 @@ $\times$4  & 28.43  & 28.73  & \color{red} 30.84  & 28.70  & \color{red} 30.86  
 
 
 \begin{figure*}
+\vspace{-.5cm}
 \includegraphics[width=\textwidth]{figs/fig1_sffsr.pdf}
 \caption{(Top) Our results using a single network for all scale factors. Super-resolved images over all scales are clean and sharp. (Bottom)  Results of Dong et al.  \cite{Dong2014} ($\times$3 model used for all scales). Result images are not visually pleasing. To handle multiple scales, existing methods require multiple networks.}
 \end{figure*}
@@ -315,32 +320,34 @@ In the task of SR, this corresponds to the amount of contextual information that
 In addition, very deep networks can exploit high nonlinearities. We use 19 rectified linear units and our networks can model very complex functions with moderate number of channels (neurons). The advantages of making a thin deep network is well explained in Simonyan and Zisserman \cite{simonyan2015very}.
 
 We now experimentally show that very deep networks significantly improve SR performance. We train and test networks of depth ranging from 5 to 20 (only counting weight layers excluding nonlinearity layers). In Figure \ref{fig:depth}, we show the results. In most cases, performance increases as depth increases. As depth increases, performance improves rapidly. 
+%
+%\begin{figure*}
+%\vspace{-.5cm}
+%\begin{adjustwidth}{0cm}{-0.5cm}
+%\begin{center}
+%\footnotesize
+%\setlength{\tabcolsep}{5pt}
+%\begin{tabular}{ c C{3.5cm}  C{3.5cm}  C{3.5cm}  }
+%\multirow{4}{*}{\graphicspath{{figs/fig1/}}\includegraphics[width=0.17\textwidth]{img039_GTbox.png}}
+%& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_HR.png}}\vspace{0.3ex}
+%& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_A+.png}}\vspace{0.3ex}
+%& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_RFL.png}}\vspace{0.3ex}
+%\\
+%& Original (PSNR, SSIM)& A+ (22.74, 0.7234)& RFL (22.54, 0.7092)\\
+%& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SelfEx.png}}\vspace{0.3ex}
+%& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SRCNN.png}}\vspace{0.3ex}
+%& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_VDSR.png}}\vspace{0.3ex}
+%\\
+%& SelfEx (22.79, {\color{blue}{0.7341}})& SRCNN ({\color{blue}{22.84}}, 0.7248)& VDSR (Ours) ({\color{red}{23.91}}, {\color{red}{0.7858}})\\
+%\end{tabular}
+%\caption{Super-resolution results of ``img039"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
+%\label{fig:c1}
+%\end{center}
+%\end{adjustwidth}
+%\end{figure*}
 
 \begin{figure*}
-\begin{adjustwidth}{0cm}{-0.5cm}
-\begin{center}
-\footnotesize
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{ c C{3.5cm}  C{3.5cm}  C{3.5cm}  }
-\multirow{4}{*}{\graphicspath{{figs/fig1/}}\includegraphics[width=0.17\textwidth]{img039_GTbox.png}}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_HR.png}}\vspace{0.3ex}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_A+.png}}\vspace{0.3ex}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_RFL.png}}\vspace{0.3ex}
-\\
-& Original (PSNR, SSIM)& A+ (22.74, 0.7234)& RFL (22.54, 0.7092)\\
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SelfEx.png}}\vspace{0.3ex}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_SRCNN.png}}\vspace{0.3ex}
-& \raisebox{-13.0ex} {\graphicspath{{figs/fig1/}}\includegraphics[width=0.20\textwidth]{img039_for_fig1_VDSR.png}}\vspace{0.3ex}
-\\
-& SelfEx (22.79, {\color{blue}{0.7341}})& SRCNN ({\color{blue}{22.84}}, 0.7248)& VDSR (Ours) ({\color{red}{23.91}}, {\color{red}{0.7858}})\\
-\end{tabular}
-\caption{Super-resolution results of ``img039"(Urban100) with scale factor $\times$3. Our result is visually pleasing.}
-\label{fig:c1}
-\end{center}
-\end{adjustwidth}
-\end{figure*}
-
-\begin{figure*}
+\vspace{-.5cm}
 \begin{adjustwidth}{0.5cm}{0.5cm}
 \begin{center}
 \small
@@ -363,6 +370,7 @@ Original& A+& RFL& SelfEx& SRCNN& VDSR (Ours) \\
 \end{figure*}
 
 \begin{figure*}
+\vspace{-.5cm}
 \begin{adjustwidth}{0.5cm}{0.5cm}
 \begin{center}
 \small
