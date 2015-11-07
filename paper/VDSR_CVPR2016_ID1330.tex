@@ -362,7 +362,7 @@ We now experimentally show that very deep networks significantly improve SR perf
 Ground Truth& A+ \cite{Timofte}& RFL \cite{schulter2015fast}& SelfEx \cite{Huang-CVPR-2015}& SRCNN \cite{Dong2014}& VDSR (Ours) \\
 (PSNR, SSIM)& (22.92, 0.7379)& (22.90, 0.7332)& (23.00, 0.7439)& ({\color{blue}{23.15}}, {\color{blue}{0.7487}})& ({\color{red}{23.50}}, {\color{red}{0.7777}})\\
 \end{tabular}
-\caption{Super-resolution results of ``148026"(\textit{B100}) with scale factor $\times$3. Our result is visually pleasing.}
+\caption{Super-resolution results of ``148026" (\textit{B100}) with scale factor $\times$3. VDSR recovers sharp lines. }
 \label{fig:c2}
 \end{center}
 \end{adjustwidth}
@@ -380,11 +380,11 @@ Ground Truth& A+ \cite{Timofte}& RFL \cite{schulter2015fast}& SelfEx \cite{Huang
 & {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_SelfEx.png}}
 & {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_SRCNN.png}}
 & {\graphicspath{{figs/figVDSR/}}\includegraphics[width=0.15\textwidth]{38092_for_figVDSR_VDSR.png}}
-\\
+\\n 
 Ground Truth& A+ \cite{Timofte}& RFL \cite{schulter2015fast}& SelfEx \cite{Huang-CVPR-2015}& SRCNN \cite{Dong2014}& VDSR (Ours) \\
 (PSNR, SSIM)& (27.08, 0.7514)& (27.08, 0.7508)& (27.02, 0.7513)& ({\color{blue}{27.16}}, {\color{blue}{0.7545}})& ({\color{red}{27.32}}, {\color{red}{0.7606}})\\
 \end{tabular}
-\caption{Super-resolution results of ``38092"(\textit{B100}) with scale factor $\times$3. Our result is visually pleasing.}
+\caption{Super-resolution results of ``38092" (\textit{B100}) with scale factor $\times$3. The horn in the image is sharp in the result of VDSR.}
 \label{fig:c3}
 \end{center}
 \end{adjustwidth}
@@ -490,7 +490,7 @@ This framework crops pixels near image boundary. For our method, this procedure 
 \subsection{Comparisons with State-of-the-Art Methods}
 We provide quantitative and qualitative comparisons. Compared methods are A+ \cite{Timofte}, RFL\cite{schulter2015fast}, SelfEx \cite{Huang-CVPR-2015} and SRCNN \cite{Dong2014}. In Table \ref{tbl:benchmark}, we provide a summary of quantitative evaluation on several datasets. Our methods outperform all previous methods in these datasets. Moreover, our methods are relatively fast. The public code of SRCNN based on a CPU implementation is slower than the code used by Dong et. al \cite{dong2015image} in their paper based on a GPU implementation.
 
-In Figures \ref{fig:c1}, \ref{fig:c2} and \ref{fig:c3}, we compare our method with top-performing methods. In Figure \ref{fig:c1}, only our method perfectly reconstructs the line in the middle. Similarly, in Figures \ref{fig:c2} and \ref{fig:c3}, lines are clean and vivid in our method whereas they are severely blurred or distorted in other methods. 
+In Figures \ref{fig:c2} and \ref{fig:c3}, we compare our method with top-performing methods. In Figure \ref{fig:c2}, only our method perfectly reconstructs the line in the middle. Similarly, in Figure \ref{fig:c3}, contours are clean and vivid in our method whereas they are severely blurred or distorted in other methods. 
 
 \section{Conclusion}
 In this work, we have presented a super-resolution method using very deep networks. Training a very deep network is hard due to a slow convergence rate. We use residual-learning and extremely high learning rates to optimize a very deep network fast. Convergence speed is maximized and we use gradient clipping to ensure the training stability. We have demonstrated that our method outperforms the existing method by a large margin on benchmarked images. We believe our approach is readily applicable to other image restoration problems such as denoising and compression artifact removal.
